@@ -1,4 +1,53 @@
-const daysTag = document.querySelector(".days"),
+const createCalendar = ({locale, year}) => {
+    
+    const weekDays = [...Array(7).keys()]// dias de la semana del 0 al 6
+    const intlWeekDay = new Intl.DateTimeFormat(locale, {weekday: 'short'})
+    // el uno de enero de 2024 cae en lunes al recorrer el mapa genera los dias
+    const weekDaysNames = weekDays.map(weekdayIndex => {
+        const weekDayName = intlWeekDay.format(new Date(2024, 0, weekdayIndex + 1))
+        return weekDayName
+    })
+
+    const renderedWeekDays = weekDaysNames.map(weekDayName => 
+        `<li class="day-name">${weekDayName}</li>`).join("")
+
+    const months = [...Array(12).keys()]// meses del 0 al 11
+    const intl = new Intl.DateTimeFormat(locale, {month: 'long'})
+
+    const calendar = months.map(monthKey => {
+        const monthName = intl.format(new Date(year, monthKey))
+        //TODO aqui tendras que pones el año que quieras como variable
+        const nextmMonthIndex = monthKey + 1
+        const daysOfMonth = new Date(year, nextmMonthIndex, 0).getDate()
+        const startsOn = new Date(year, monthKey, 1).getDay()
+        return {
+            monthName,
+            daysOfMonth,
+            startsOn
+        }
+    })
+
+    const html = calendar.map(({daysOfMonth, monthName, startsOn}) => {
+
+        const days = [...Array(daysOfMonth).keys()]
+        const firstDayAtributtes = `class='first-day' style='--first-day-start: ${startsOn}'`
+        const renderedDays = days.map((day, index) => 
+        `<li ${index === 0 ? firstDayAtributtes : ''}>${day + 1}</li>`).join('')
+        
+        const titleMonth = `<h1>${monthName}</h1>`
+
+        return `${titleMonth}<ol>${renderedWeekDays} ${renderedDays}</ol>`
+    }).join("")
+
+    document.querySelector("div").innerHTML = html
+
+}
+let date = new Date(),
+currYear = date.getFullYear()
+createCalendar({year: currYear, locale: 'es'})
+/////////////////////////////////////////////
+
+/*const daysTag = document.querySelector(".days"),
 currentDate = document.querySelector(".current-date"),
 prevNextIcon = document.querySelectorAll(".icons span");
 
@@ -41,7 +90,7 @@ const renderCalendar = () => {
     }
 
     // se pasa el texto del mes y el año actual al html
-    currentDate.innerText = `${months[currMonth]} ${currYear}`; 
+    currentDate.innerText = `${months[currMonth]}`; 
     // se pasan todos los li  de los dias al html
     daysTag.innerHTML = liTag;
 }
@@ -62,4 +111,4 @@ prevNextIcon.forEach(icon => { // getting prev and next icons
         }
         renderCalendar(); // calling renderCalendar function
     });
-});
+});*/

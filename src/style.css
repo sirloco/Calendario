@@ -10,15 +10,60 @@ body{
   display: flex;
   align-items: center;
   padding: 0 10px;
-  justify-content: center;
+  /*justify-content: center;*/
   min-height: 100vh;
   background: #9B59B6;
 }
+
+ol{
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin: 0;
+  padding: 0;
+}
+
+li{
+  font-size: 1.5ch;
+}
+
+h1{
+  text-transform: capitalize;
+}
+
+h2{
+  margin-bottom: 4px;
+  padding: 0;
+}
+
+div{
+  text-align: center;
+}
+
+.first-day{
+  grid-column-start: var(--first-day-start);
+}
+
+.day-name{
+  background:#f2f2f2;
+  font-weight: bold;
+  font-size: 12px;
+  margin-bottom: 2px;
+  padding: 4px;
+  text-align: center;
+}
+
+
+
+
+/*
+
 .wrapper{
   width: 450px;
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+  
 }
 .wrapper header{
   display: flex;
@@ -100,4 +145,4 @@ header .current-date{
 }
 .days li:not(.active):hover::before{
   background: #f2f2f2;
-}
+}*/
