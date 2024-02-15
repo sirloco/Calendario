@@ -31,15 +31,16 @@ const createCalendar = ({locale, year}) => {
 
         const days = [...Array(daysOfMonth).keys()]
         const firstDayAtributtes = `class='first-day' style='--first-day-start: ${startsOn}'`
+        const activeDaysAtributtes = `class='active'`
         const renderedDays = days.map((day, index) => 
-        `<li ${index === 0 ? firstDayAtributtes : ''}>${day + 1}</li>`).join('')
+        `<li ${index === 0 ? firstDayAtributtes : activeDaysAtributtes}>${day + 1}</li>`).join('')
         
         const titleMonth = `<h1>${monthName}</h1>`
 
-        return `${titleMonth}<ol>${renderedWeekDays} ${renderedDays}</ol>`
+        return `<div>${titleMonth}<ol>${renderedWeekDays} ${renderedDays}</ol></div>`
     }).join("")
 
-    document.querySelector("div").innerHTML = html
+    document.querySelector('div').innerHTML = html
 
 }
 let date = new Date(),
