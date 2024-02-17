@@ -16,10 +16,10 @@ const createCalendar = ({locale, year}) => {
 
     const calendar = months.map(monthKey => {
         const monthName = intl.format(new Date(year, monthKey))
-        //TODO aqui tendras que pones el año que quieras como variable
         const nextmMonthIndex = monthKey + 1
         const daysOfMonth = new Date(year, nextmMonthIndex, 0).getDate()
-        const startsOn = new Date(year, monthKey, 1).getDay()
+        let startsOn = new Date(year, monthKey, 1).getDay()//getday() de domingo a sabado 0..6
+        startsOn = (startsOn+6)%7+1// Esto hace que la semana empiece en lunes no domingo 1..7
         return {
             monthName,
             daysOfMonth,
@@ -28,7 +28,6 @@ const createCalendar = ({locale, year}) => {
     })
 
     const html = calendar.map(({daysOfMonth, monthName, startsOn}) => {
-
         const days = [...Array(daysOfMonth).keys()]
         const firstDayAtributtes = `class='first-day' style='--first-day-start: ${startsOn}'`
         const activeDaysAtributtes = `class='active'`
@@ -40,7 +39,8 @@ const createCalendar = ({locale, year}) => {
         return `<div>${titleMonth}<ol>${renderedWeekDays} ${renderedDays}</ol></div>`
     }).join("")
 
-    document.querySelector('div').innerHTML = html
+    document.querySelector("div").innerHTML = html
+    document.querySelector(".year").innerHTML = year
 
 }
 let date = new Date(),
