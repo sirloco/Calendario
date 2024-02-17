@@ -1,4 +1,4 @@
-const createCalendar = ({locale, year}) => {
+function createCalendar ({locale, year}) {
     
     const weekDays = [...Array(7).keys()]// dias de la semana del 0 al 6
     const intlWeekDay = new Intl.DateTimeFormat(locale, {weekday: 'short'})
@@ -40,12 +40,42 @@ const createCalendar = ({locale, year}) => {
     }).join("")
 
     document.querySelector("div").innerHTML = html
-    document.querySelector(".year").innerHTML = year
-
+    
+    
 }
+
+const selectYear = ({year}) => {
+    // Obtener el elemento select
+    var yearSelect = document.getElementById("year-select");
+    
+    const minYear = 1900;
+    const maxYear = 2100;
+    
+    for (var i = minYear; i <= maxYear; i++) {
+        var option = document.createElement("option");
+        option.text = i;
+        option.value = i;
+        yearSelect.add(option);
+      }
+    
+    // Establecer el año actual como la opción predeterminada seleccionada
+    yearSelect.value = year;
+
+    
+}
+
 let date = new Date(),
 currYear = date.getFullYear()
+selectYear({year:currYear})
 createCalendar({year: currYear, locale: 'es'})
+
+
+   // var yearSelected = document.getElementById("year-select").value;
+   // console.log("año" + yearSelected)
+   // createCalendar({year: yearSelected, locale: 'es'})
+
+
+
 /////////////////////////////////////////////
 
 /*const daysTag = document.querySelector(".days"),
