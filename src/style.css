@@ -81,6 +81,11 @@ li.active, li.first-day {
 li.active:hover, li.first-day:hover {
   background-color: #ccc; /* Cambia el color de fondo cuando se pasa el ratón */
 }
+
+.festivo {
+  background-color: red;
+  color: white;
+}
 /*
 
 .wrapper{

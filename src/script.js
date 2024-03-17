@@ -1,7 +1,11 @@
-function createCalendar ({locale, year}) {
+async function createCalendar ({locale, year}) {
     
     const weekDays = [...Array(7).keys()]// dias de la semana del 0 al 6
     const intlWeekDay = new Intl.DateTimeFormat(locale, {weekday: 'short'})
+
+    const festivos = await cargarFestivos();
+    console.log(festivos)
+
     // el uno de enero de 2024 cae en lunes al recorrer el mapa genera los dias
     const weekDaysNames = weekDays.map(weekdayIndex => {
         const weekDayName = intlWeekDay.format(new Date(2024, 0, weekdayIndex + 1))
@@ -21,27 +25,62 @@ function createCalendar ({locale, year}) {
         let startsOn = new Date(year, monthKey, 1).getDay()//getday() de domingo a sabado 0..6
         startsOn = (startsOn+6)%7+1// Esto hace que la semana empiece en lunes no domingo 1..7
         return {
+            monthKey,
             monthName,
             daysOfMonth,
             startsOn
         }
     })
 
-    const html = calendar.map(({daysOfMonth, monthName, startsOn}) => {
+    // Función para cargar los festivos
+    async function cargarFestivos() {
+        try {
+            const alava = "01"
+            const vitoria = "01059";
+            const zamudio = "48905";
+            const bizkaia = "48";
+            
+            const festivosVitoria = festivosPaisVasco(alava, vitoria);
+            const festivosZamudio = festivosPaisVasco(bizkaia, zamudio);
+            const response = await fetch(festivosVitoria);
+            const festivos = await response.json();
+            return festivos;
+        } catch (error) {
+            console.error("Error al cargar los festivos:", error);
+            return [];
+        }
+    }
+
+    function festivosPaisVasco(territorio, municipio){
+        return "https://api-calendario-laboral.online/api/v1/festivities/bylocation/"+territorio+"/"+municipio+"/bydate/"+year;
+    }
+    
+    const firstDayAttributes = `class='first-day' style='--first-day-start: ${calendar[0].startsOn}'`; 
+
+    const html = calendar.map(({monthKey, daysOfMonth, monthName, startsOn}) => {
         const days = [...Array(daysOfMonth).keys()]
         const firstDayAtributtes = `class='first-day' style='--first-day-start: ${startsOn}'`
-        const activeDaysAtributtes = `class='active'`
+        const activeDaysAttributes = `class='active'`
+
+ /*       const renderedDays = days.map((day, index) => {
+            const festivo = festivos.find(f => {
+                const festivoDate = new Date(f.date);
+                return festivoDate.getMonth() === monthKey && festivoDate.getDate() === day + 1;
+            });
+
+            const festivoClass = festivo ? "festivo" : "";
+            return `<li ${index === 0 ? firstDayAttributes : activeDaysAttributes} class="${festivoClass}">${day + 1}</li>`;
+        }).join('')
+*/
         const renderedDays = days.map((day, index) => 
-        `<li ${index === 0 ? firstDayAtributtes : activeDaysAtributtes}>${day + 1}</li>`).join('')
+        `<li ${index === 0 ? firstDayAtributtes : activeDaysAttributes}>${day + 1}</li>`).join('')
         
         const titleMonth = `<h1>${monthName}</h1>`
 
         return `<div>${titleMonth}<ol>${renderedWeekDays} ${renderedDays}</ol></div>`
     }).join("")
 
-    document.querySelector("div").innerHTML = html
-    
-    
+    document.querySelector(".container").innerHTML = html;
 }
 
 const selectYear = ({year}) => {
