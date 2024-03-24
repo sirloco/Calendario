@@ -1,11 +1,19 @@
-async function createCalendar ({locale, year}) {
+async function createCalendar ({locale, year, zona}) {
     
     const weekDays = [...Array(7).keys()]// dias de la semana del 0 al 6
     const intlWeekDay = new Intl.DateTimeFormat(locale, {weekday: 'short'})
 
     const festivos = await cargarFestivos();
-    console.log(festivos)
+    
+/*    festivos.forEach(festividad => {
+        console.log(new Date(festividad.festivity_date).getMonth());
+        console.log("Fecha de Festividad:", festividad.festivity_date);
+        console.log("Nombre de Festividad (Español):", festividad.festivity_name_es);
+        console.log("Ubicación (Español):", festividad.location_es);
+        console.log("--------------------");
+    });*/
 
+    
     // el uno de enero de 2024 cae en lunes al recorrer el mapa genera los dias
     const weekDaysNames = weekDays.map(weekdayIndex => {
         const weekDayName = intlWeekDay.format(new Date(2024, 0, weekdayIndex + 1))
@@ -39,7 +47,7 @@ async function createCalendar ({locale, year}) {
             const vitoria = "01059";
             const zamudio = "48905";
             const bizkaia = "48";
-            
+
             const festivosVitoria = festivosPaisVasco(alava, vitoria);
             const festivosZamudio = festivosPaisVasco(bizkaia, zamudio);
             const response = await fetch(festivosVitoria);
@@ -55,27 +63,31 @@ async function createCalendar ({locale, year}) {
         return "https://api-calendario-laboral.online/api/v1/festivities/bylocation/"+territorio+"/"+municipio+"/bydate/"+year;
     }
     
-    const firstDayAttributes = `class='first-day' style='--first-day-start: ${calendar[0].startsOn}'`; 
+    //const firstDayAttributes = `class='first-day' style='--first-day-start: ${calendar[0].startsOn}'`; 
 
     const html = calendar.map(({monthKey, daysOfMonth, monthName, startsOn}) => {
         const days = [...Array(daysOfMonth).keys()]
         const firstDayAtributtes = `class='first-day' style='--first-day-start: ${startsOn}'`
-        const activeDaysAttributes = `class='active'`
-
- /*       const renderedDays = days.map((day, index) => {
-            const festivo = festivos.find(f => {
-                const festivoDate = new Date(f.date);
-                return festivoDate.getMonth() === monthKey && festivoDate.getDate() === day + 1;
-            });
-
-            const festivoClass = festivo ? "festivo" : "";
-            return `<li ${index === 0 ? firstDayAttributes : activeDaysAttributes} class="${festivoClass}">${day + 1}</li>`;
-        }).join('')
-*/
-        const renderedDays = days.map((day, index) => 
-        `<li ${index === 0 ? firstDayAtributtes : activeDaysAttributes}>${day + 1}</li>`).join('')
+        let activeDaysAttributes = `class='active'`
+        let estiloFestivo = `class='festivo'`
         
+
         const titleMonth = `<h1>${monthName}</h1>`
+
+        // se crea un array con los festivos de este mes
+        let fMes = festivos.filter(festividad => monthKey === new Date(festividad.festivity_date).getMonth());
+        //console.log("Mes: ",monthKey,fMes);
+
+        const renderedDays = days.map((day, index) => {
+            let estilo = activeDaysAttributes;
+            
+            //Busca dentro del array los festivos que trae
+            const resultado = fMes.find(festivo => new Date(festivo.festivity_date).getDate() === index+1);
+            //TODO Falta incluir los festivos que caen en primero de mes
+            estilo = resultado?estiloFestivo:activeDaysAttributes;
+       
+            return `<li ${index === 0 ? firstDayAtributtes : estilo}>${day + 1}</li>`
+        }).join('');
 
         return `<div>${titleMonth}<ol>${renderedWeekDays} ${renderedDays}</ol></div>`
     }).join("")
@@ -106,7 +118,7 @@ const selectYear = ({year}) => {
 let date = new Date(),
 currYear = date.getFullYear()
 selectYear({year:currYear})
-createCalendar({year: currYear, locale: 'es'})
+createCalendar({year: currYear, locale: 'es', zona:""})
 
 
    // var yearSelected = document.getElementById("year-select").value;
