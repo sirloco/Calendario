@@ -66,11 +66,7 @@ async function createCalendar ({locale, year, zona}) {
     //const firstDayAttributes = `class='first-day' style='--first-day-start: ${calendar[0].startsOn}'`; 
 
     const html = calendar.map(({monthKey, daysOfMonth, monthName, startsOn}) => {
-        const days = [...Array(daysOfMonth).keys()]
-        const firstDayAtributtes = `class='first-day' style='--first-day-start: ${startsOn}'`
-        let activeDaysAttributes = `class='active'`
-        let estiloFestivo = `class='festivo'`
-        
+        const days = [...Array(daysOfMonth).keys()]      
 
         const titleMonth = `<h1>${monthName}</h1>`
 
@@ -79,14 +75,20 @@ async function createCalendar ({locale, year, zona}) {
         //console.log("Mes: ",monthKey,fMes);
 
         const renderedDays = days.map((day, index) => {
-            let estilo = activeDaysAttributes;
-            
+                        
             //Busca dentro del array los festivos que trae
-            const resultado = fMes.find(festivo => new Date(festivo.festivity_date).getDate() === index+1);
-            //TODO Falta incluir los festivos que caen en primero de mes
-            estilo = resultado?estiloFestivo:activeDaysAttributes;
-       
-            return `<li ${index === 0 ? firstDayAtributtes : estilo}>${day + 1}</li>`
+            const esFestivo = fMes.find(festivo => new Date(festivo.festivity_date).getDate() === index+1);
+            
+            let estilo = esFestivo? `class='festivo'` : `class='active'`;
+            
+            if(index === 0) 
+                estilo = `class='first-day' style='--first-day-start: ${startsOn}'`;
+            
+            if(esFestivo && index === 0)
+                estilo = `class='first-day-festivo' style='--first-day-start: ${startsOn}'`;
+            
+            return `<li ${estilo}>${day + 1}</li>`
+            
         }).join('');
 
         return `<div>${titleMonth}<ol>${renderedWeekDays} ${renderedDays}</ol></div>`

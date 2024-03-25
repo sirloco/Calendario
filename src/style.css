@@ -55,7 +55,7 @@ h1{
   padding-left: 10px;
 }
 
-.first-day{
+.first-day, .first-day-festivo{
   grid-column-start: var(--first-day-start);
 }
 
@@ -82,7 +82,7 @@ li.active:hover, li.first-day:hover {
   background-color: #ccc; /* Cambia el color de fondo cuando se pasa el ratón */
 }
 
-.festivo {
+.festivo, .first-day-festivo {
   background-color: red;
   color: white;
 }
