@@ -197,6 +197,15 @@ prevNextIcon.forEach(icon => { // getting prev and next icons
     });
 });*/
 
+
+
+
+
+
+
+
+
+
 console.log(Hulk);
 console.log(batman);
 console.log(lobezno);
