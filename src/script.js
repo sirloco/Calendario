@@ -198,3 +198,4 @@ prevNextIcon.forEach(icon => { // getting prev and next icons
 });*/
 
 console.log("bruja escarlata");
+console.log("Gambito");
