@@ -116,6 +116,17 @@ const selectYear = ({year}) => {
 
     
 }
+// Función para llamar a createCalendar() con el año seleccionado
+function actualizarCalendario() {
+    // Obtener el valor del año seleccionado
+    const yearSeleccionado = parseInt(document.getElementById("year-select").value);
+    
+    // Llamar a createCalendar() con el año seleccionado
+    createCalendar({ year: yearSeleccionado, locale: 'es', zona: "" });
+}
+
+// Agregar un listener de eventos para detectar cambios en el menú desplegable
+document.getElementById("year-select").addEventListener("change", actualizarCalendario);
 
 let date = new Date(),
 currYear = date.getFullYear()
