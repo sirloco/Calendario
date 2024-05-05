@@ -13,16 +13,8 @@ body{
 header{
   font-size: xx-large;
   font-weight: bold;
-  margin-left: 10px;
+  margin-left: -1%;
   color: floralwhite;
-}
-
-select {
-  background: transparent;
-  border-color: transparent;
-  font-size: xx-large;
-  font-weight: bold;
-  color: white;
 }
 
 .container{
@@ -31,9 +23,9 @@ select {
   gap: 5px;
 }
 
-.container > div {
+.container > section {
   background: #fff;
-  border-radius: 10px;
+  border-radius: 4%;
 }
 
 ol{
@@ -85,6 +77,7 @@ li.active:hover, li.first-day:hover {
 .festivo, .first-day-festivo {
   background-color: red;
   color: white;
+  border-radius: 8%;
 }
 
 #year-navigation button {
@@ -105,3 +98,11 @@ li.active:hover, li.first-day:hover {
   font-weight: bold; /* Opcional: hacer el texto en negrita */
 }
 
+#zone-select {
+  /*vertical-align: 0px;*/
+  font-size: xx-large;
+  font-weight: bold;
+  background-color: transparent;
+  border-color: transparent;
+  color: white;
+}

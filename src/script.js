@@ -1,49 +1,124 @@
 async function createCalendar ({locale, year, zona}) {
+
+    /** Se usa el spread ... para crear el array [0,1,2,3,4,5,6] */
+    const weekDays = [...Array(7).keys()];
+    const months   = [...Array(12).keys()];
     
-    const weekDays = [...Array(7).keys()]// dias de la semana del 0 al 6
-    const intlWeekDay = new Intl.DateTimeFormat(locale, {weekday: 'short'})
+    var festivos = await cargarFestivos(zona); 
 
-    const festivos = await cargarFestivos();
-        
-    // el uno de enero de 2024 cae en lunes al recorrer el mapa genera los dias
-    const weekDaysNames = weekDays.map(weekdayIndex => {
-        const weekDayName = intlWeekDay.format(new Date(2024, 0, weekdayIndex + 1))
-        return weekDayName
-    })
-
-    const renderedWeekDays = weekDaysNames.map(weekDayName => 
-        `<li class="day-name">${weekDayName}</li>`).join("")
-
-    const months = [...Array(12).keys()]// meses del 0 al 11
-    const intl = new Intl.DateTimeFormat(locale, {month: 'long'})
-
+    /** Se define el idioma con locale y weekday define el formato */
+    const intlWeekDay = new Intl.DateTimeFormat(locale, {weekday: 'short'});
+    const intlMonths  = new Intl.DateTimeFormat(locale, {month: 'long'});
+    
+    /** 
+     * Contiene un array de objetos al recorrer los meses por cada mes la funcion flecha
+     * devuelve un objeto
+     * @returns {object} Cada objeto es un mes que contiene los parametros:
+     * @param {String} monthName Nombre del mes según el año y el mes que empieza en 0
+     * @param {number} daysOfMonth Número de días del mes getdate() lo hace si le pones dia 0 pues te deja en el ultimo dia del mes anterio
+     * @param {number} monthKey De 0 a 11 en los dias del mes se hace +1 pues día 0 lo pasa al mes anterior
+     * @param {number} startsOn Posicion deempiece del primer día del mes, de domingo 1 a sabado 7 
+     * (para arreglarlo se le hace +6 se calcula el resto de divir entre 7 y se le suma 1
+     * asi queda de lunes 1 a domingo 7)
+    */
     const calendar = months.map(monthKey => {
-        const monthName = intl.format(new Date(year, monthKey))
-        const nextmMonthIndex = monthKey + 1
-        const daysOfMonth = new Date(year, nextmMonthIndex, 0).getDate()
-        let startsOn = new Date(year, monthKey, 1).getDay()//getday() de domingo a sabado 0..6
-        startsOn = (startsOn+6)%7+1// Esto hace que la semana empiece en lunes no domingo 1..7
         return {
-            monthKey,
-            monthName,
-            daysOfMonth,
-            startsOn
+            monthName: intlMonths.format(new Date(year, monthKey)),
+            daysOfMonth: new Date(year, monthKey + 1, 0).getDate(),
+            startsOn: (new Date(year, monthKey, 1).getDay() + 6) % 7 + 1,
+            monthKey: monthKey
         }
-    })
+    });
 
-    // Función para cargar los festivos
-    async function cargarFestivos() {
+    /**
+     * El 1 de enero de 2024 cae en lunes al recorrer weekDays genera los dias, ejemplos:
+     * [lun,mar,mie,jue,vie,sab,dom] localizacion definida como es.
+     * [月,火,水,木,金,土,日] localizacion definida como ja.
+    */
+    const weekDaysNames = weekDays.map(weekdayIndex => {
+        const weekDayName = intlWeekDay.format(new Date(2024, 0, weekdayIndex + 1));
+        return weekDayName
+    });
+
+    /** 
+     * Se generan los elementos de la lista que después serán insertados en el ol 
+     * se usa el template `` para insertar variables y el .join("") para quitar las comas
+    */
+    const renderedWeekDays = weekDaysNames.map(weekDayName => 
+        `<li class="day-name">${weekDayName}</li>`).join("");
+
+    /**
+     * Se recorren los meses y se crea el html necesario para pintarlos
+     *  @param {object} mes Contiene datos referente al mes 
+    */
+    const html = calendar.map(({monthKey, daysOfMonth, monthName, startsOn}) => {
+
+        const days = [...Array(daysOfMonth).keys()];   
+        
+        /** Se crea un array con los festivos filtrando solo los de este mes */
+        let fMes = festivos.filter(festividad => monthKey === new Date(festividad.festivity_date).getMonth());
+        
+        /** Se crean los elementos de la lista (dias del mes) con los estilos de cada dia */
+        const renderedDays = days.map((day, index) => {
+            
+            /** Busca dentro del array los festivos que trae, el find devuelve true o false */
+            const esFestivo = fMes.find(festivo => new Date(festivo.festivity_date).getDate() === index+1);
+            
+            let estilo = esFestivo? "class='festivo'" : "class='active'";
+            
+            if(index === 0){
+                /** Se le pasa al css la columna del grid donde debe colocar el dia 1 */
+                let styleFirstDay = `style='--first-day-start: ${startsOn}'`
+                estilo = esFestivo? `class='first-day-festivo' ${styleFirstDay}'`:`class='first-day' ${styleFirstDay}`
+            }
+   
+            return `<li ${estilo}>${day + 1}</li>`
+            
+        }).join('');
+        
+        /** Los elementos creados se añaden a una lista ordenada dentro de cada seccion*/
+        return `<section>
+                    <h1>${monthName}</h1>
+                    <ol>
+                        ${renderedWeekDays} 
+                        ${renderedDays}
+                    </ol>
+                </section>`
+
+    }).join("")
+    
+    /** 
+     * Se crea un array de objetos cada objeto es un dia festivo
+     * @returns {object} festivos de la lista contiene los parametros:
+     * @param {string} festivity_date fecha de la festividad YYYY-MM-DD
+     * @param {string} festivity_name_es nombre de la festividad en castellano
+     * @param {string} festivity_name_eu nombre de la festividad en euskera
+     * @param {string} geo_code codigo del territorio (provincia)
+     * @param {string} latwgs84 latitud es null cuando es de toda la comunidad
+     * @param {string} location_es ubicacion de la festividad en castellano
+     * @param {string} location_eu ubicacion de la festividad en euskera
+     * @param {string} lonwgs84 longintud es null cuando es de toda la comunidad
+     * @param {string} territory_name nombre de la provincia (si es de comunidad:"Todas/denak")
+    */ 
+    async function cargarFestivos(zona) {
+        /** Alava */
+        var provincia = "01";
+        switch (zona) {
+            case '01059':
+                provincia = "01";
+                break; 
+            case '48905':
+                provincia = "48";
+                break;
+        }
+
         try {
-            const alava = "01"
-            const vitoria = "01059";
-            const zamudio = "48905";
-            const bizkaia = "48";
 
-            const festivosVitoria = festivosPaisVasco(alava, vitoria);
-            const festivosZamudio = festivosPaisVasco(bizkaia, zamudio);
-            const response = await fetch(festivosVitoria);
+            const festivosZona = festivosPaisVasco(provincia, zona);
+            const response = await fetch(festivosZona);
             const festivos = await response.json();
             return festivos;
+
         } catch (error) {
             console.error("Error al cargar los festivos:", error);
             return [];
@@ -53,53 +128,17 @@ async function createCalendar ({locale, year, zona}) {
     function festivosPaisVasco(territorio, municipio){
         return "https://api-calendario-laboral.online/api/v1/festivities/bylocation/"+territorio+"/"+municipio+"/bydate/"+year;
     }
-    
-    //const firstDayAttributes = `class='first-day' style='--first-day-start: ${calendar[0].startsOn}'`; 
-
-    const html = calendar.map(({monthKey, daysOfMonth, monthName, startsOn}) => {
-        const days = [...Array(daysOfMonth).keys()]      
-
-        const titleMonth = `<h1>${monthName}</h1>`
-
-        // se crea un array con los festivos de este mes
-        let fMes = festivos.filter(festividad => monthKey === new Date(festividad.festivity_date).getMonth());
-        //console.log("Mes: ",monthKey,fMes);
-
-        const renderedDays = days.map((day, index) => {
-                        
-            //Busca dentro del array los festivos que trae
-            const esFestivo = fMes.find(festivo => new Date(festivo.festivity_date).getDate() === index+1);
-            
-            let estilo = esFestivo? `class='festivo'` : `class='active'`;
-            
-            if(index === 0) 
-                estilo = `class='first-day' style='--first-day-start: ${startsOn}'`;
-            
-            if(esFestivo && index === 0)
-                estilo = `class='first-day-festivo' style='--first-day-start: ${startsOn}'`;
-            
-            return `<li ${estilo}>${day + 1}</li>`
-            
-        }).join('');
-
-        return `<div>${titleMonth}<ol>${renderedWeekDays} ${renderedDays}</ol></div>`
-    }).join("")
 
     document.querySelector(".container").innerHTML = html;
 }
-
-const selectYear = ({year}) => {
-    // Obtener el elemento span (botonera)
-    var urteSelect = document.getElementById("current-year");
-    // Establecel el año actual como predeterminado entre los botones
-    urteSelect.textContent = year;
-}
-
 
 // Función para avanzar un año
 function avanzarAnio() {
     // Obtener el elemento del año actual
     const currentYearElement = document.getElementById("current-year");
+    var zoneSelect = document.getElementById("zone-select");
+    var selectedZone = zoneSelect.value;
+
     // Obtener el año actual
     let currentYear = parseInt(currentYearElement.textContent);
     // Incrementar el año
@@ -107,13 +146,16 @@ function avanzarAnio() {
     // Actualizar el año en el elemento
     currentYearElement.textContent = currentYear;
     // Llamar a createCalendar() con el nuevo año
-    createCalendar({ year: currentYear, locale: 'es', zona: "" });
+    createCalendar({ year: currentYear, locale: 'es', zona: selectedZone});
 }
 
 // Función para retroceder un año
 function retrocederAnio() {
     // Obtener el elemento del año actual
     const currentYearElement = document.getElementById("current-year");
+    var zoneSelect = document.getElementById("zone-select");
+    var selectedZone = zoneSelect.value;
+
     // Obtener el año actual
     let currentYear = parseInt(currentYearElement.textContent);
     // Decrementar el año
@@ -121,14 +163,29 @@ function retrocederAnio() {
     // Actualizar el año en el elemento
     currentYearElement.textContent = currentYear;
     // Llamar a createCalendar() con el nuevo año
-    createCalendar({ year: currentYear, locale: 'es', zona: "" });
+    createCalendar({ year: currentYear, locale: 'es', zona: selectedZone});
 }
 
-// Agregar eventos de clic a los botones de navegación de año
+function cambioZona(){
+    var currentYearElement = document.getElementById("current-year");
+    let currentYear = parseInt(currentYearElement.textContent);
+    var zoneSelect = document.getElementById("zone-select");
+    var selectedZone = zoneSelect.value;
+    createCalendar({year: currentYear, locale: 'es', zona: selectedZone});
+}
+
+/** Agregar eventos de clic a los botones de navegación de año y festivos*/
 document.getElementById("prev-year").addEventListener("click", retrocederAnio);
 document.getElementById("next-year").addEventListener("click", avanzarAnio);
+document.getElementById("zone-select").addEventListener("click", cambioZona);
 
-let date = new Date(),
-currYear = date.getFullYear()
-selectYear({year:currYear})
-createCalendar({year: currYear, locale: 'es', zona:""})
+var urteSelect = document.getElementById("current-year");
+var zoneSelect = document.getElementById("zone-select");
+
+var selectedZone = zoneSelect.value;
+
+let date = new Date();
+let currYear = date.getFullYear();
+urteSelect.textContent = currYear;
+
+createCalendar({year: currYear, locale: 'es', zona: selectedZone});
