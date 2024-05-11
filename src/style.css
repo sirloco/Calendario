@@ -47,7 +47,7 @@ h1{
   padding-left: 10px;
 }
 
-.first-day, .first-day-festivo{
+.first-day{
   grid-column-start: var(--first-day-start);
 }
 
@@ -60,21 +60,17 @@ h1{
   text-align: center;
 }
 
-li.active, li.first-day {
+.laboral:hover {
+  background-color: #ccc; /* Cambia el color de fondo cuando se pasa el ratón */
+}
+
+.laboral {
   background-color: transparent; /* Color de fondo transparente por defecto */
-  /*display: flex;*/
-  /*justify-content: center;*/
-  /*align-items: center;*/
-  /*margin: 5px;*/
   border-radius: 8%; /* Hace que los elementos sean circulares */
   transition: background-color 0.3s ease; /* Transición suave del color de fondo */
 }
 
-li.active:hover, li.first-day:hover {
-  background-color: #ccc; /* Cambia el color de fondo cuando se pasa el ratón */
-}
-
-.festivo, .first-day-festivo {
+.festivo{
   background-color: red;
   color: white;
   border-radius: 8%;

@@ -10,6 +10,9 @@ async function createCalendar ({locale, year, zona}) {
     const intlWeekDay = new Intl.DateTimeFormat(locale, {weekday: 'short'});
     const intlMonths  = new Intl.DateTimeFormat(locale, {month: 'long'});
     
+    let nFestivosElement = document.getElementById("festivity-count");
+    nFestivosElement.textContent = festivos.length;
+    
     /** 
      * Contiene un array de objetos al recorrer los meses por cada mes la funcion flecha
      * devuelve un objeto
@@ -61,15 +64,16 @@ async function createCalendar ({locale, year, zona}) {
         /** Se crean los elementos de la lista (dias del mes) con los estilos de cada dia */
         const renderedDays = days.map((day, index) => {
             
-            /** Busca dentro del array los festivos que trae, el find devuelve true o false */
+            /** Busca dentro del array los festivos que trae, el find devuelve el primer elemento coincidente */
             const esFestivo = fMes.find(festivo => new Date(festivo.festivity_date).getDate() === index+1);
-            
-            let estilo = esFestivo? "class='festivo'" : "class='active'";
+
+            let festividad = esFestivo? esFestivo.festivity_name_es : '';
+            let estilo = esFestivo? `class='festivo' data-festividad='${festividad}'` : "class='laboral'";
             
             if(index === 0){
                 /** Se le pasa al css la columna del grid donde debe colocar el dia 1 */
-                let styleFirstDay = `style='--first-day-start: ${startsOn}'`
-                estilo = esFestivo? `class='first-day-festivo' ${styleFirstDay}'`:`class='first-day' ${styleFirstDay}`
+                let styleFirstDay = `style="--first-day-start: ${startsOn}"`
+                estilo = esFestivo? `class='first-day festivo' data-festividad='${festividad}' ${styleFirstDay}`:`class='first-day' ${styleFirstDay}`
             }
    
             return `<li ${estilo}>${day + 1}</li>`
@@ -132,7 +136,9 @@ async function createCalendar ({locale, year, zona}) {
     document.querySelector(".container").innerHTML = html;
 }
 
-// Función para avanzar un año
+/**
+ * Genera el calendario al avanzar un año
+*/
 function avanzarAnio() {
     // Obtener el elemento del año actual
     const currentYearElement = document.getElementById("current-year");
@@ -149,13 +155,14 @@ function avanzarAnio() {
     createCalendar({ year: currentYear, locale: 'es', zona: selectedZone});
 }
 
-// Función para retroceder un año
+/**
+ * Genera el calendario al retroceder un año
+*/
 function retrocederAnio() {
     // Obtener el elemento del año actual
     const currentYearElement = document.getElementById("current-year");
     var zoneSelect = document.getElementById("zone-select");
     var selectedZone = zoneSelect.value;
-
     // Obtener el año actual
     let currentYear = parseInt(currentYearElement.textContent);
     // Decrementar el año
@@ -166,18 +173,47 @@ function retrocederAnio() {
     createCalendar({ year: currentYear, locale: 'es', zona: selectedZone});
 }
 
+/**
+ * Genera el calendario al seleccionar una zona diferente
+*/
 function cambioZona(){
     var currentYearElement = document.getElementById("current-year");
-    let currentYear = parseInt(currentYearElement.textContent);
     var zoneSelect = document.getElementById("zone-select");
+    let currentYear = parseInt(currentYearElement.textContent);
     var selectedZone = zoneSelect.value;
     createCalendar({year: currentYear, locale: 'es', zona: selectedZone});
 }
+
+/**
+ * Muestra el texto del nombre del festivo en la cabecera
+ * @param {*} event desencadenador del evento al notar el raton encima
+*/
+function mostrarTextoFestivo(event){
+    let target = event.target;    
+    if (target.classList.contains("festivo")) {
+      let cartel = document.getElementById("festivity-name");
+      cartel.textContent = target.dataset.festividad;
+    }
+}
+
+/**
+ * Oculta el texto del nombre del festivo en la cabecera
+ * @param {*} event desencadenador del evento al retirar el raton de encima
+*/
+function ocultarTextoFestivo(event) {
+    let target = event.target;
+    if (event.target.classList.contains("festivo")) {
+        let cartel = document.getElementById("festivity-name");
+        cartel.textContent = ""
+    }
+};
 
 /** Agregar eventos de clic a los botones de navegación de año y festivos*/
 document.getElementById("prev-year").addEventListener("click", retrocederAnio);
 document.getElementById("next-year").addEventListener("click", avanzarAnio);
 document.getElementById("zone-select").addEventListener("click", cambioZona);
+document.addEventListener("mouseover", (event) => mostrarTextoFestivo(event));
+document.addEventListener("mouseout", (event) => ocultarTextoFestivo(event));
 
 var urteSelect = document.getElementById("current-year");
 var zoneSelect = document.getElementById("zone-select");
