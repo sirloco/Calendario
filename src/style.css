@@ -78,6 +78,23 @@ h1{
   color: white;
   border-radius: 8%;
 }
+.festivo.cae {
+  background-color: red;
+  color: white;
+  border-radius: 8%;
+}
+
+.festivo.vitoria, .festivo.zamudio {
+  background-color: blue;
+  color: white;
+  border-radius: 8%;
+}
+
+.festivo.araba {
+  background-color: green;
+  color: white;
+  border-radius: 8%;
+}
 
 #year-navigation button {
   background-color: transparent; /* Hacer los botones transparentes */

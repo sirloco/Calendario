@@ -12,7 +12,6 @@ async function createCalendar ({locale, year, zona}) {
     
     let nFestivosElement = document.getElementById("festivity-count");
     nFestivosElement.textContent = festivos.length;
-    
     /** 
      * Contiene un array de objetos al recorrer los meses por cada mes la funcion flecha
      * devuelve un objeto
@@ -58,22 +57,39 @@ async function createCalendar ({locale, year, zona}) {
 
         const days = [...Array(daysOfMonth).keys()];   
         
+
+
         /** Se crea un array con los festivos filtrando solo los de este mes */
-        let fMes = festivos.filter(festividad => monthKey === new Date(festividad.festivity_date).getMonth());
+        let fMes = festivos.filter(festividad => monthKey === new Date(festividad.date).getMonth());
         
+
         /** Se crean los elementos de la lista (dias del mes) con los estilos de cada dia */
         const renderedDays = days.map((day, index) => {
             
             /** Busca dentro del array los festivos que trae, el find devuelve el primer elemento coincidente */
-            const esFestivo = fMes.find(festivo => new Date(festivo.festivity_date).getDate() === index+1);
+            const esFestivo = fMes.find(festivo => new Date(festivo.date).getDate() === index+1);
 
-            let festividad = esFestivo? esFestivo.festivity_name_es : '';
-            let estilo = esFestivo? `class='festivo' data-festividad='${festividad}'` : "class='laboral'";
+            let nombreFestividad = '';
+            let estilo = "class='laboral'";
             
+            if(esFestivo) {
+                
+                const tipoFestividad = {
+                    "CAE": "festivo cae",
+                    "Zamudio": "festivo zamudio",
+                    "Vitoria-Gasteiz": "festivo vitoria",
+                    "Álava - Araba": "festivo araba"
+                }
+
+                nombreFestividad = esFestivo.descripcionEs;
+
+                estilo = `class='${tipoFestividad[esFestivo.municipalityEs] || 'laboral'}' data-festividad='${nombreFestividad}'`;
+            }
+
             if(index === 0){
                 /** Se le pasa al css la columna del grid donde debe colocar el dia 1 */
                 let styleFirstDay = `style="--first-day-start: ${startsOn}"`
-                estilo = esFestivo? `class='first-day festivo' data-festividad='${festividad}' ${styleFirstDay}`:`class='first-day' ${styleFirstDay}`
+                estilo = esFestivo? `class='first-day festivo' data-festividad='${nombreFestividad}' ${styleFirstDay}`:`class='first-day' ${styleFirstDay}`
             }
    
             return `<li ${estilo}>${day + 1}</li>`
@@ -106,22 +122,27 @@ async function createCalendar ({locale, year, zona}) {
     */ 
     async function cargarFestivos(zona) {
         /** Alava */
-        var provincia = "01";
+        var municipio = "Vitoria-Gasteiz";
         switch (zona) {
-            case '01059':
-                provincia = "01";
+            case 'Vitoria-Gasteiz':
+                municipio = "Vitoria-Gasteiz";
                 break; 
-            case '48905':
-                provincia = "48";
+            case 'Zamudio':
+                municipio = "Zamudio";
                 break;
         }
 
         try {
 
-            const festivosZona = festivosPaisVasco(provincia, zona);
+            const festivosZona = "https://opendata.euskadi.eus/contenidos/ds_eventos/calendario_laboral_"+year+"/opendata/calendario_laboral_"+year+".json";
             const response = await fetch(festivosZona);
             const festivos = await response.json();
-            return festivos;
+
+            let festivosFiltrados = festivos.filter(festividad => 
+                (festividad.municipalityEs === "CAE" || festividad.municipalityEs === zona || festividad.municipalityEs === "Álava - Araba")
+            );
+
+            return festivosFiltrados;
 
         } catch (error) {
             console.error("Error al cargar los festivos:", error);
@@ -129,10 +150,7 @@ async function createCalendar ({locale, year, zona}) {
         }
     }
 
-    function festivosPaisVasco(territorio, municipio){
-        return "https://api-calendario-laboral.online/api/v1/festivities/bylocation/"+territorio+"/"+municipio+"/bydate/"+year;
-    }
-
+    /** Se inserta el html en el contenedor */
     document.querySelector(".container").innerHTML = html;
 }
 
