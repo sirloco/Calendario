@@ -3,11 +3,12 @@
 *{
   font-family: 'Poppins', sans-serif;
 }
-body{
+body, html{
   height: 100%;
   background: rgb(63,94,251);
   background: linear-gradient(50deg, rgba(63,94,251,1) 0%, rgba(57,245,181,1) 100%); 
-  padding: 5px;
+  padding: 0px;
+  margin: 0px;
 }
 
 header{
@@ -21,6 +22,8 @@ header{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 5px;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .container > section {
