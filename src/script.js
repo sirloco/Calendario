@@ -73,16 +73,16 @@ async function createCalendar ({locale, year, zona}) {
             let estilo = "class='laboral'";
             
             if(esFestivo) {
-                
+                /** a la izquierda el valor del json a la derecha el selector de css que utilizara con los colores correspondientes */
                 const tipoFestividad = {
-                    "CAE": "festivo cae",
-                    "Zamudio": "festivo zamudio",
-                    "Vitoria-Gasteiz": "festivo vitoria",
-                    "Álava - Araba": "festivo araba"
+                    "CAE": "festivo nacional",
+                    "Zamudio": "festivo local",
+                    "Vitoria-Gasteiz": "festivo local",
+                    "Álava - Araba": "festivo autonomico"
                 }
 
                 nombreFestividad = esFestivo.descripcionEs;
-
+                /** Si el array devuelve valor pondra el selector si no devuelve valor coge 'laboral' por defecto */
                 estilo = `class='${tipoFestividad[esFestivo.municipalityEs] || 'laboral'}' data-festividad='${nombreFestividad}'`;
             }
 

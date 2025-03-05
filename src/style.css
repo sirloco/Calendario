@@ -73,24 +73,19 @@ h1{
   transition: background-color 0.3s ease; /* Transición suave del color de fondo */
 }
 
-.festivo{
-  background-color: red;
-  color: white;
-  border-radius: 8%;
-}
-.festivo.cae {
+.festivo.nacional{
   background-color: red;
   color: white;
   border-radius: 8%;
 }
 
-.festivo.vitoria, .festivo.zamudio {
+.festivo.local {
   background-color: blue;
   color: white;
   border-radius: 8%;
 }
 
-.festivo.araba {
+.festivo.autonomico {
   background-color: green;
   color: white;
   border-radius: 8%;
