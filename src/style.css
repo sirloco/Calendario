@@ -117,3 +117,24 @@ h1{
   border-color: transparent;
   color: white;
 }
+
+/* Estilo para cumpleaños */
+.cumpleanos {
+  background-color: #ffeb3b; /* Amarillo suave */
+  color: black;
+  border-radius: 8%;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover sobre los cumpleaños para dar más interactividad */
+.cumpleanos:hover {
+  background-color: #ffca28; /* Amarillo más fuerte cuando se pasa el ratón */
+}
+
+/* Añadir el emoji de pastel de cumpleaños */
+/*.cumpleanos::after {
+  content: "🎂"; /* Emoji de pastel de cumpleaños */
+  /*margin-left: 5px;
+}*/
+

@@ -6,6 +6,12 @@ async function createCalendar ({locale, year, zona}) {
     
     var festivos = await cargarFestivos(zona); 
 
+    // Cargar los cumpleaños reales en lugar de los de prueba
+    const cumpleanos = await cargarCumpleanos();
+
+
+    console.log("Cumpleaños:", cumpleanos);
+
     /** Se define el idioma con locale y weekday define el formato */
     const intlWeekDay = new Intl.DateTimeFormat(locale, {weekday: 'short'});
     const intlMonths  = new Intl.DateTimeFormat(locale, {month: 'long'});
@@ -31,6 +37,14 @@ async function createCalendar ({locale, year, zona}) {
             monthKey: monthKey
         }
     });
+
+    //// TEST CUMPLEAÑOS
+    // Añadir ejemplo de cumpleaños
+    const cumpleañosEjemplos = [
+    {date: `${year}-01-01`, descripcionEs: "Cumpleaños de Ejemplo 1", municipioEs: "Vitoria-Gasteiz"},
+    {date: `${year}-01-15`, descripcionEs: "Cumpleaños de Ejemplo 2", municipioEs: "Vitoria-Gasteiz"}
+];
+    ////
 
     /**
      * El 1 de enero de 2024 cae en lunes al recorrer weekDays genera los dias, ejemplos:
@@ -60,7 +74,12 @@ async function createCalendar ({locale, year, zona}) {
 
 
         /** Se crea un array con los festivos filtrando solo los de este mes */
-        let fMes = festivos.filter(festividad => monthKey === new Date(festividad.date).getMonth());
+        //let fMes = festivos.filter(festividad => monthKey === new Date(festividad.date).getMonth());
+
+
+        let fMes = festivos.filter(festividad => monthKey === new Date(festividad.date).getMonth())
+        .concat(cumpleañosEjemplos.filter(cumpleaños => monthKey === new Date(cumpleaños.date).getMonth()));
+
         
 
         /** Se crean los elementos de la lista (dias del mes) con los estilos de cada dia */
@@ -86,10 +105,12 @@ async function createCalendar ({locale, year, zona}) {
                 estilo = `class='${tipoFestividad[esFestivo.municipalityEs] || 'laboral'}' data-festividad='${nombreFestividad}'`;
             }
 
+
+
             if(index === 0){
                 /** Se le pasa al css la columna del grid donde debe colocar el dia 1 */
                 let styleFirstDay = `style="--first-day-start: ${startsOn}"`
-                estilo = esFestivo? `class='first-day festivo' data-festividad='${nombreFestividad}' ${styleFirstDay}`:`class='first-day' ${styleFirstDay}`
+                estilo = esFestivo? `class='first-day festivo nacional' data-festividad='${nombreFestividad}' ${styleFirstDay}`:`class='first-day' ${styleFirstDay}`
             }
    
             return `<li ${estilo}>${day + 1}</li>`
@@ -149,6 +170,26 @@ async function createCalendar ({locale, year, zona}) {
             return [];
         }
     }
+
+    async function cargarCumpleanos() {
+        try {
+            const url = "https://soluciones.abgam.es/Imagen%20Corporativa/Recursos%20gr%C3%A1ficos/Plantillas/cump.json";
+            console.log(url);
+            const response = await fetch(url,{credentials: "include"});
+            if (!response.ok) {
+                throw new Error("Error al cargar el archivo JSON de cumpleaños");
+            }
+            const cumpleaños = await response.json();
+    
+            // Filtrar solo los de Vitoria
+            return cumpleaños.filter(c => c.municipioEs === "Vitoria-Gasteiz");
+    
+        } catch (error) {
+            console.error("Error al cargar los cumpleaños:", error);
+            return [];
+        }
+    }
+    
 
     /** Se inserta el html en el contenedor */
     document.querySelector(".container").innerHTML = html;
