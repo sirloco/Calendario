@@ -118,14 +118,24 @@ h1{
   color: white;
 }
 
-/* Estilo para cumpleaños */
+
+@keyframes rotar-borde {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
 .cumpleanos {
-  background-color: #ffeb3b; /* Amarillo suave */
+ 
   color: black;
   border-radius: 8%;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+  /* Simulación de borde animado */
+  outline: 1.9px dashed hsl(125, 100%, 50%); /* Comienza en verde */
+  outline-offset: 1px;
+  
+  /* Aplica animación solo al borde */
+  animation: girar-borde 1.5s linear infinite, rotar-borde 1.5s linear infinite;
 }
+
 
 /* Hover sobre los cumpleaños para dar más interactividad */
 .cumpleanos:hover {
