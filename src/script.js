@@ -75,8 +75,7 @@ async function createCalendar ({locale, year, zona}) {
             
             /** Busca dentro del array los festivos que trae, el find devuelve el primer elemento coincidente */
             const esFestivo = fMes.find(festivo => new Date(festivo.date).getDate() === index+1);
-
-            //const esCumpleanos = esFestivo.descripcionEs.toLowerCase().includes("cumpleanos");
+            //const esCumple = cumpleanos.find(cumple => new Date(cumple.FechaNacimiento).getDate() === index + 1 && cumple.WorkplaceName === "VITORIA");
 
             let nombreFestividad = '';
             let estilo = "class='laboral'";
@@ -97,9 +96,10 @@ async function createCalendar ({locale, year, zona}) {
                 console.log(fMes);
                 
                 // Si el tipo es cumpleaños, añades un estilo especial
-                /*if (esCumpleanos) {
-                    estilo += " cumpleanos";
-                }  */ 
+               /* if (esCumple) {
+                    nombreFestividad = `${esCumple.NombreCompleto} (Cumpleaños)`;
+                    estilo = `class='cumpleanos' data-festividad='${nombreFestividad}'`;
+                }*/
             }
 
 
