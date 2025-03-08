@@ -60,27 +60,24 @@ async function createCalendar ({locale, year, zona}) {
 
         const days = [...Array(daysOfMonth).keys()];   
         
-
-
         /** Se crea un array con los festivos filtrando solo los de este mes */
-        //let fMes = festivos.filter(festividad => monthKey === new Date(festividad.date).getMonth());
-
-
         let fMes = festivos.filter(festividad => monthKey === new Date(festividad.date).getMonth())
-        .concat(cumpleanos.filter(cumpleaños => monthKey === new Date(cumpleaños.FechaNacimiento).getMonth()));
-   
-
+        .concat(cumpleanos.filter(cumpleaños => monthKey === new Date(cumpleaños.date).getMonth()));
+        
         /** Se crean los elementos de la lista (dias del mes) con los estilos de cada dia */
         const renderedDays = days.map((day, index) => {
             
             /** Busca dentro del array los festivos que trae, el find devuelve el primer elemento coincidente */
             const esFestivo = fMes.find(festivo => new Date(festivo.date).getDate() === index+1);
-            //const esCumple = cumpleanos.find(cumple => new Date(cumple.FechaNacimiento).getDate() === index + 1 && cumple.WorkplaceName === "VITORIA");
+            const esCumple = fMes.find(cumple => 
+                cumple.municipalityEs ==="Cumpleanos" && 
+                cumple.WorkplaceName === "VITORIA" && 
+                new Date(cumple.date).getDate() === index+1);
 
             let nombreFestividad = '';
-            let estilo = "class='laboral'";
+            let clases = [];
             
-            if(esFestivo) {
+            if(esFestivo){
                 /** a la izquierda el valor del json a la derecha el selector de css que utilizara con los colores correspondientes */
                 const tipoFestividadMap = {
                     "CAE": "festivo nacional",
@@ -89,24 +86,19 @@ async function createCalendar ({locale, year, zona}) {
                     "Álava - Araba": "festivo autonomico"
                 }
 
-                nombreFestividad = esFestivo.descripcionEs;
-                /** Si el array devuelve valor pondra el selector si no devuelve valor coge 'laboral' por defecto */
-                let tipoFestividad = tipoFestividadMap[esFestivo.municipalityEs] || 'laboral';
-                estilo = `class='${tipoFestividad}' data-festividad='${nombreFestividad}' title='${nombreFestividad} 🎉'`;
-
-                console.log(fMes);
-                
-                // Si el tipo es cumpleaños, añades un estilo especial
-               /* if (esCumple) {
-                    nombreFestividad = `${esCumple.NombreCompleto} (Cumpleaños)`;
-                    estilo = `class='cumpleanos' data-festividad='${nombreFestividad}'`;
-                }*/
-
-
+                nombreFestividad = esFestivo.descripcionEs + '🎉';
+                /** Si el array devuelve valor pondra el selector si no devuelve valor coge 'laboral' por defecto */                
+                clases.push(tipoFestividadMap[esFestivo.municipalityEs] || 'laboral');               
             }
-
-
-
+            // Si el tipo es cumpleaños, añades un estilo especial
+            if (esCumple) {
+                nombreFestividad = `${esCumple.NombreCompleto} 🎂`
+                clases.push('cumpleanos');
+            }
+            
+            
+            let estilo = `class='${clases.join(' ')}' data-festividad='${nombreFestividad}' title='${nombreFestividad}'`;
+            
             if(index === 0){
                 /** Se le pasa al css la columna del grid donde debe colocar el dia 1 */
                 let styleFirstDay = `style="--first-day-start: ${startsOn}"`
@@ -187,7 +179,6 @@ async function createCalendar ({locale, year, zona}) {
     async function cargarCumpleanos() {
         try {
             const url = "https://raw.githubusercontent.com/sirloco/Calendario/refs/heads/master/data/cump.json";
-            console.log(url);
             const response = await fetch(url);
             if (!response.ok) {
                 throw new Error("Error al cargar el archivo JSON de cumpleaños");

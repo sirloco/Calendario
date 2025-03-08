@@ -125,12 +125,11 @@ h1{
 }
 
 .cumpleanos {
- 
   color: black;
   border-radius: 8%;
   /* Simulación de borde animado */
   outline: 1.9px dashed hsl(125, 100%, 50%); /* Comienza en verde */
-  outline-offset: 1px;
+  outline-offset: -1px;
   
   /* Aplica animación solo al borde */
   animation: girar-borde 1.5s linear infinite, rotar-borde 1.5s linear infinite;
