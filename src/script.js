@@ -6,7 +6,7 @@ async function createCalendar ({locale, year, zona}) {
     
     var festivos = await cargarFestivos(zona); 
 
-    // Cargar los cumpleaños reales en lugar de los de prueba
+    /** Se cargan los cumpleaños*/
     const cumpleanos = await cargarCumpleanos();
 
     /** Se define el idioma con locale y weekday define el formato */
@@ -60,7 +60,7 @@ async function createCalendar ({locale, year, zona}) {
 
         const days = [...Array(daysOfMonth).keys()];   
         
-        /** Se crea un array con los festivos filtrando solo los de este mes */
+        /** Se crea un array con los festivos y cumples filtrando solo los de este mes */
         let fMes = festivos.filter(festividad => monthKey === new Date(festividad.date).getMonth())
         .concat(cumpleanos.filter(cumpleaños => monthKey === new Date(cumpleaños.date).getMonth()));
         
@@ -69,6 +69,7 @@ async function createCalendar ({locale, year, zona}) {
             
             /** Busca dentro del array los festivos que trae, el find devuelve el primer elemento coincidente */
             const esFestivo = fMes.find(festivo => new Date(festivo.date).getDate() === index+1);
+            // TODO si alguien cumple años y es festivo, se mostrará el cumpleaños y no el festivo o si otro cumple años el mismo día
             const esCumple = fMes.find(cumple => 
                 cumple.municipalityEs ==="Cumpleanos" && 
                 cumple.WorkplaceName === "VITORIA" && 
@@ -98,7 +99,7 @@ async function createCalendar ({locale, year, zona}) {
             
             
             let estilo = `class='${clases.join(' ')}' data-festividad='${nombreFestividad}' title='${nombreFestividad}'`;
-            
+            // TODO esto hay que cambiarlo y ponerlo encima de la declaracion de estilo
             if(index === 0){
                 /** Se le pasa al css la columna del grid donde debe colocar el dia 1 */
                 let styleFirstDay = `style="--first-day-start: ${startsOn}"`
@@ -197,17 +198,6 @@ async function createCalendar ({locale, year, zona}) {
 
     /** Se inserta el html en el contenedor */
     document.querySelector(".container").innerHTML = html;
-
-
-    // Inicializar los tooltips de los festivos y cumpleaños
-    /*document.querySelectorAll(".festivo, .cumpleanos").forEach(element => {
-        tippy(element, {
-            content: element.getAttribute("data-festividad"), // Usa el atributo personalizado para el texto
-            placement: "top",  // Posición del tooltip
-            animation: "fade", // Animación suave
-            theme: "tomato",    // Tema claro
-        });
-    });*/
 }
 
 /**
