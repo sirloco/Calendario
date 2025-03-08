@@ -82,7 +82,7 @@ async function createCalendar ({locale, year, zona}) {
             
             if(esFestivo) {
                 /** a la izquierda el valor del json a la derecha el selector de css que utilizara con los colores correspondientes */
-                const tipoFestividad = {
+                const tipoFestividadMap = {
                     "CAE": "festivo nacional",
                     "Zamudio": "festivo local",
                     "Vitoria-Gasteiz": "festivo local",
@@ -91,8 +91,9 @@ async function createCalendar ({locale, year, zona}) {
 
                 nombreFestividad = esFestivo.descripcionEs;
                 /** Si el array devuelve valor pondra el selector si no devuelve valor coge 'laboral' por defecto */
-                estilo = `class='${tipoFestividad[esFestivo.municipalityEs] || 'laboral'}' data-festividad='${nombreFestividad}'`;
-                
+                let tipoFestividad = tipoFestividadMap[esFestivo.municipalityEs] || 'laboral';
+                estilo = `class='${tipoFestividad}' data-festividad='${nombreFestividad}' title='${nombreFestividad} 🎉'`;
+
                 console.log(fMes);
                 
                 // Si el tipo es cumpleaños, añades un estilo especial
@@ -100,6 +101,8 @@ async function createCalendar ({locale, year, zona}) {
                     nombreFestividad = `${esCumple.NombreCompleto} (Cumpleaños)`;
                     estilo = `class='cumpleanos' data-festividad='${nombreFestividad}'`;
                 }*/
+
+
             }
 
 
@@ -151,13 +154,26 @@ async function createCalendar ({locale, year, zona}) {
         }
 
         try {
-
             const festivosZona = "https://opendata.euskadi.eus/contenidos/ds_eventos/calendario_laboral_"+year+"/opendata/calendario_laboral_"+year+".json";
             const response = await fetch(festivosZona);
             const festivos = await response.json();
 
             let festivosFiltrados = festivos.filter(festividad => 
                 (festividad.municipalityEs === "CAE" || festividad.municipalityEs === zona || festividad.municipalityEs === "Álava - Araba")
+            );
+
+            // Añadir los días 24 y 31 de diciembre como festivos
+            festivosFiltrados.push(
+                {
+                    date: `${year}-12-24`,
+                    descripcionEs: "Festivo por convenio Art. 22, párr. 5",
+                    municipalityEs: "CAE"
+                },
+                {
+                    date: `${year}-12-31`,
+                    descripcionEs: "Festivo por convenio Art. 22, párr. 5",
+                    municipalityEs: "CAE"
+                }
             );
 
             return festivosFiltrados;
@@ -190,6 +206,17 @@ async function createCalendar ({locale, year, zona}) {
 
     /** Se inserta el html en el contenedor */
     document.querySelector(".container").innerHTML = html;
+
+
+    // Inicializar los tooltips de los festivos y cumpleaños
+    /*document.querySelectorAll(".festivo, .cumpleanos").forEach(element => {
+        tippy(element, {
+            content: element.getAttribute("data-festividad"), // Usa el atributo personalizado para el texto
+            placement: "top",  // Posición del tooltip
+            animation: "fade", // Animación suave
+            theme: "tomato",    // Tema claro
+        });
+    });*/
 }
 
 /**
