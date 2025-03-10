@@ -128,7 +128,7 @@ h1{
   color: black;
   border-radius: 8%;
   /* Simulación de borde animado */
-  outline: 1.9px dashed hsl(125, 100%, 50%); /* Comienza en verde */
+  outline: 1.9px solid hsl(125, 100%, 50%); /* Comienza en verde */
   outline-offset: -1px;
   
   /* Aplica animación solo al borde */
@@ -141,9 +141,56 @@ h1{
   background-color: #ffca28; /* Amarillo más fuerte cuando se pasa el ratón */
 }
 
-/* Añadir el emoji de pastel de cumpleaños */
-/*.cumpleanos::after {
-  content: "🎂"; /* Emoji de pastel de cumpleaños */
-  /*margin-left: 5px;
-}*/
+
+#festivity-container {
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  max-width: 900px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+#festivity-name {
+  display: block;
+  color: #333;
+  font-size: 14px;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Estilo de los días */
+/* Lista de días - apilados verticalmente */
+#days-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Asegura que ocupen todo el ancho disponible */
+  margin: 5px 0; /* Espacio entre los elementos */
+  gap: 10px;  /* Espacio entre los elementos */
+}
+
+#days-list .day {
+  display: block;
+  margin: 5px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#days-list .day:hover {
+  background-color: #ddd;
+}
+
+
 

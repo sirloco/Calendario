@@ -70,13 +70,15 @@ async function createCalendar ({locale, year, zona}) {
             /** Busca dentro del array los festivos que trae, el find devuelve el primer elemento coincidente */
             const esFestivo = fMes.find(festivo => new Date(festivo.date).getDate() === index+1);
             // TODO si alguien cumple años y es festivo, se mostrará el cumpleaños y no el festivo o si otro cumple años el mismo día
-            const esCumple = fMes.find(cumple => 
+            const cumpleaneros = fMes.filter(cumple => 
                 cumple.municipalityEs ==="Cumpleanos" && 
                 cumple.WorkplaceName === "VITORIA" && 
-                new Date(cumple.date).getDate() === index+1);
+                new Date(cumple.date).getDate() === index + 1);
 
+            let esPrimerDia = index === 0;
             let nombreFestividad = '';
             let clases = [];
+
             
             if(esFestivo){
                 /** a la izquierda el valor del json a la derecha el selector de css que utilizara con los colores correspondientes */
@@ -92,20 +94,23 @@ async function createCalendar ({locale, year, zona}) {
                 clases.push(tipoFestividadMap[esFestivo.municipalityEs] || 'laboral');               
             }
             // Si el tipo es cumpleaños, añades un estilo especial
-            if (esCumple) {
-                nombreFestividad = `${esCumple.NombreCompleto} 🎂`
+            if (cumpleaneros.length){
+                nombreFestividad += cumpleaneros.map(c => `${c.NombreCompleto} 🎂`).join(', ');
                 clases.push('cumpleanos');
             }
             
-            
-            let estilo = `class='${clases.join(' ')}' data-festividad='${nombreFestividad}' title='${nombreFestividad}'`;
-            // TODO esto hay que cambiarlo y ponerlo encima de la declaracion de estilo
-            if(index === 0){
-                /** Se le pasa al css la columna del grid donde debe colocar el dia 1 */
-                let styleFirstDay = `style="--first-day-start: ${startsOn}"`
-                estilo = esFestivo? `class='first-day festivo nacional' data-festividad='${nombreFestividad}' ${styleFirstDay}`:`class='first-day' ${styleFirstDay}`
+            if(esPrimerDia){
+                clases.push('first-day');
             }
-   
+            
+            /** Se crea un string con los estilos de cada dia */
+            let estilo = `
+            class='${clases.join(' ')}'
+            ${esPrimerDia ? `style='--first-day-start: ${startsOn}'` : ""}
+            data-festividad='${nombreFestividad}'
+            title='${nombreFestividad}'
+            `.trim();
+          
             return `<li ${estilo}>${day + 1}</li>`
             
         }).join('');
@@ -252,25 +257,53 @@ function cambioZona(){
  * Muestra el texto del nombre del festivo en la cabecera
  * @param {*} event desencadenador del evento al notar el raton encima
 */
-function mostrarTextoFestivo(event){
-    let target = event.target;    
-    if (target.classList.contains("festivo")) {
-      let cartel = document.getElementById("festivity-name");
-      cartel.textContent = target.dataset.festividad;
+/*function mostrarTextoFestivo(event){
+    let target = event.target;
+    let festividad = target.dataset.festividad;
+    
+    if(festividad){
+        let cartel = document.getElementById("festivity-name");
+        cartel.textContent = festividad;
+    }
+}*/
+
+function mostrarTextoFestivo(event) {
+    let target = event.target;
+    let festividad = target.dataset.festividad;
+    let cartelContainer = document.getElementById("festivity-name");
+
+    if (festividad) {
+        cartelContainer.textContent = festividad;  // Actualiza el texto
     }
 }
+
+// Añadir el evento mouseover a todos los días
+let dias = document.querySelectorAll('#days-list .day');
+dias.forEach(dia => {
+    dia.addEventListener('mouseover', mostrarTextoFestivo);
+});
+
+// Restaurar texto por defecto al sacar el ratón
+dias.forEach(dia => {
+    dia.addEventListener('mouseout', () => {
+        let cartelContainer = document.getElementById("festivity-name");
+        cartelContainer.textContent = "Pasa el ratón sobre un día para ver más detalles";  // Texto por defecto
+    });
+});
+
+
 
 /**
  * Oculta el texto del nombre del festivo en la cabecera
  * @param {*} event desencadenador del evento al retirar el raton de encima
 */
-function ocultarTextoFestivo(event) {
+/*function ocultarTextoFestivo(event) {
     let target = event.target;
     if (event.target.classList.contains("festivo")) {
         let cartel = document.getElementById("festivity-name");
         cartel.textContent = ""
     }
-};
+};*/
 
 /** Agregar eventos de clic a los botones de navegación de año y festivos*/
 document.getElementById("prev-year").addEventListener("click", retrocederAnio);
