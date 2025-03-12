@@ -74,11 +74,14 @@ async function createCalendar ({locale, year, zona}) {
                 cumple.municipalityEs ==="Cumpleanos" && 
                 cumple.WorkplaceName === "VITORIA" && 
                 new Date(cumple.date).getDate() === index + 1);
-
-            let esPrimerDia = index === 0;
+                
+            let firstDayColumn = index === 0 ? `style = '--first-day-start: ${startsOn}'` : '';
             let nombreFestividad = '';
             let clases = [];
-
+            
+            if(firstDayColumn){ 
+                clases.push('first-day'); 
+            }
             
             if(esFestivo){
                 /** a la izquierda el valor del json a la derecha el selector de css que utilizara con los colores correspondientes */
@@ -89,27 +92,22 @@ async function createCalendar ({locale, year, zona}) {
                     "Álava - Araba": "festivo autonomico"
                 }
 
-                nombreFestividad = esFestivo.descripcionEs + '🎉';
+                // Si es festivo, asignar la descripción y añadir la clase correspondiente
+                nombreFestividad = esFestivo.descripcionEs || '';
+                if(nombreFestividad) nombreFestividad += ' 🎉';
+            
                 /** Si el array devuelve valor pondra el selector si no devuelve valor coge 'laboral' por defecto */                
                 clases.push(tipoFestividadMap[esFestivo.municipalityEs] || 'laboral');               
             }
-            // Si el tipo es cumpleaños, añades un estilo especial
+
+           // Si el tipo es cumpleaños, añades un estilo especial
             if (cumpleaneros.length){
                 nombreFestividad += cumpleaneros.map(c => `${c.NombreCompleto} 🎂`).join(', ');
                 clases.push('cumpleanos');
             }
-            
-            if(esPrimerDia){
-                clases.push('first-day');
-            }
-            
+                        
             /** Se crea un string con los estilos de cada dia */
-            let estilo = `
-            class='${clases.join(' ')}'
-            ${esPrimerDia ? `style='--first-day-start: ${startsOn}'` : ""}
-            data-festividad='${nombreFestividad}'
-            title='${nombreFestividad}'
-            `.trim();
+            let estilo = `class='${clases.join(' ')}' ${firstDayColumn} data-festividad='${nombreFestividad}' title='${nombreFestividad}'`.trim();
           
             return `<li ${estilo}>${day + 1}</li>`
             
@@ -157,7 +155,7 @@ async function createCalendar ({locale, year, zona}) {
             const festivos = await response.json();
 
             let festivosFiltrados = festivos.filter(festividad => 
-                (festividad.municipalityEs === "CAE" || festividad.municipalityEs === zona || festividad.municipalityEs === "Álava - Araba")
+                ["CAE", zona, "Álava - Araba"].includes(festividad.municipalityEs) 
             );
 
             // Añadir los días 24 y 31 de diciembre como festivos
