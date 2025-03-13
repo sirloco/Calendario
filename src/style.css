@@ -24,6 +24,8 @@ header{
   gap: 5px;
   padding: 20px;
   box-sizing: border-box;
+  /*grid-template-columns: repeat(6, 1fr);  Define 6 columnas */
+  /*grid-template-rows: repeat(2, 1fr);  Define 2 filas */
 }
 
 .container > section {
@@ -110,7 +112,6 @@ h1{
 }
 
 #zone-select {
-  /*vertical-align: 0px;*/
   font-size: xx-large;
   font-weight: bold;
   background-color: transparent;
@@ -118,6 +119,9 @@ h1{
   color: white;
 }
 
+#zone-select option {
+  color: black; /* Color del texto de las opciones*/ 
+}
 
 @keyframes rotar-borde {
   0% { filter: hue-rotate(0deg); }
