@@ -4,7 +4,7 @@ async function createCalendar ({locale, year, zona}) {
     const weekDays = [...Array(7).keys()];
     const months   = [...Array(12).keys()];
     
-    var festivos = await cargarFestivos(zona); 
+    var festivos = await cargarFestivos(zona, year); 
 
     /** Se cargan los cumpleaños*/
     const cumpleanos = await cargarCumpleanos();
@@ -15,6 +15,7 @@ async function createCalendar ({locale, year, zona}) {
     
     let nFestivosElement = document.getElementById("festivity-count");
     nFestivosElement.textContent = festivos.length;
+
     /** 
      * Contiene un array de objetos al recorrer los meses por cada mes la funcion flecha
      * devuelve un objeto
@@ -79,9 +80,7 @@ async function createCalendar ({locale, year, zona}) {
             let nombreFestividad = '';
             let clases = [];
             
-            if(firstDayColumn){ 
-                clases.push('first-day'); 
-            }
+            if(firstDayColumn) clases.push('first-day');
             
             if(esFestivo){
                 /** a la izquierda el valor del json a la derecha el selector de css que utilizara con los colores correspondientes */
@@ -102,7 +101,13 @@ async function createCalendar ({locale, year, zona}) {
 
            // Si el tipo es cumpleaños, añades un estilo especial
             if (cumpleaneros.length){
-                nombreFestividad += cumpleaneros.map(c => `${c.NombreCompleto} 🎂`).join(', ');
+                let fechaFestividad = new Date(year, monthKey + 1, day+1).toLocaleDateString('es-ES', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+                
+                nombreFestividad += cumpleaneros.map(c => `${fechaFestividad} ${c.NombreCompleto} 🎂`).join(', ');
                 clases.push('cumpleanos');
             }
                         
@@ -123,84 +128,89 @@ async function createCalendar ({locale, year, zona}) {
                 </section>`
 
     }).join("")
-    
-    /** 
-     * Se crea un array de objetos cada objeto es un dia festivo
-     * @returns {object} festivos de la lista contiene los parametros:
-     * @param {string} festivity_date fecha de la festividad YYYY-MM-DD
-     * @param {string} festivity_name_es nombre de la festividad en castellano
-     * @param {string} festivity_name_eu nombre de la festividad en euskera
-     * @param {string} geo_code codigo del territorio (provincia)
-     * @param {string} latwgs84 latitud es null cuando es de toda la comunidad
-     * @param {string} location_es ubicacion de la festividad en castellano
-     * @param {string} location_eu ubicacion de la festividad en euskera
-     * @param {string} lonwgs84 longintud es null cuando es de toda la comunidad
-     * @param {string} territory_name nombre de la provincia (si es de comunidad:"Todas/denak")
-    */ 
-    async function cargarFestivos(zona) {
-        /** Alava */
-        var municipio = "Vitoria-Gasteiz";
-        switch (zona) {
-            case 'Vitoria-Gasteiz':
-                municipio = "Vitoria-Gasteiz";
-                break; 
-            case 'Zamudio':
-                municipio = "Zamudio";
-                break;
-        }
-
-        try {
-            const festivosZona = "https://opendata.euskadi.eus/contenidos/ds_eventos/calendario_laboral_"+year+"/opendata/calendario_laboral_"+year+".json";
-            const response = await fetch(festivosZona);
-            const festivos = await response.json();
-
-            let festivosFiltrados = festivos.filter(festividad => 
-                ["CAE", zona, "Álava - Araba"].includes(festividad.municipalityEs) 
-            );
-
-            // Añadir los días 24 y 31 de diciembre como festivos
-            festivosFiltrados.push(
-                {
-                    date: `${year}-12-24`,
-                    descripcionEs: "Festivo por convenio Art. 22, párr. 5",
-                    municipalityEs: "CAE"
-                },
-                {
-                    date: `${year}-12-31`,
-                    descripcionEs: "Festivo por convenio Art. 22, párr. 5",
-                    municipalityEs: "CAE"
-                }
-            );
-
-            return festivosFiltrados;
-
-        } catch (error) {
-            console.error("Error al cargar los festivos:", error);
-            return [];
-        }
-    }
-
-    async function cargarCumpleanos() {
-        try {
-            const url = "https://raw.githubusercontent.com/sirloco/Calendario/refs/heads/master/data/cump.json";
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error("Error al cargar el archivo JSON de cumpleaños");
-            }
-            const cumpleaños = await response.json();
-    
-            // Filtrar solo los de Vitoria
-            return cumpleaños.filter(c => c.WorkplaceName === "VITORIA");
-    
-        } catch (error) {
-            console.error("Error al cargar los cumpleaños:", error);
-            return [];
-        }
-    }
-    
-
+        
     /** Se inserta el html en el contenedor */
     document.querySelector(".container").innerHTML = html;
+}
+
+/**
+ * Carga los días festivos de una zona específica.
+ *
+ * @param {string} zona - El nombre de la zona para la cual se desean cargar los festivos.
+ * @returns {Promise<Array<Object>>} Una promesa que resuelve a un array de objetos que representan los días festivos filtrados.
+ * @throws {Error} Si ocurre un error al cargar los festivos.
+ */
+async function cargarFestivos(zona, year) {
+    /** Alava */
+    var municipio = "Vitoria-Gasteiz";
+    switch (zona) {
+        case 'Vitoria-Gasteiz':
+            municipio = "Vitoria-Gasteiz";
+            break; 
+        case 'Zamudio':
+            municipio = "Zamudio";
+            break;
+    }
+
+    try {
+        const festivosZona = "https://opendata.euskadi.eus/contenidos/ds_eventos/calendario_laboral_"+year+"/opendata/calendario_laboral_"+year+".json";
+        const response = await fetch(festivosZona);
+        const festivos = await response.json();
+
+        let festivosFiltrados = festivos.filter(festividad => 
+            ["CAE", zona, "Álava - Araba"].includes(festividad.municipalityEs) 
+        );
+
+        // Añadir los días 24 y 31 de diciembre como festivos
+        festivosFiltrados.push(
+            {
+                date: `${year}-12-24`,
+                descripcionEs: "Festivo por convenio Art. 22, párr. 5",
+                municipalityEs: "CAE"
+            },
+            {
+                date: `${year}-12-31`,
+                descripcionEs: "Festivo por convenio Art. 22, párr. 5",
+                municipalityEs: "CAE"
+            }
+        );
+
+        return festivosFiltrados;
+
+    } catch (error) {
+        console.error("Error al cargar los festivos:", error);
+        return [];
+    }
+}
+
+/**
+ * Carga y filtra asincrónicamente los datos de cumpleaños desde un archivo JSON.
+ *
+ * Esta función obtiene los datos de cumpleaños desde una URL especificada, analiza la respuesta JSON,
+ * y filtra los datos para incluir solo aquellas entradas donde el `WorkplaceName` sea "VITORIA".
+ *
+ * @returns {Promise<Array<Object>>} Una promesa que se resuelve en un array de objetos de cumpleaños
+ *                                   filtrados por el nombre del lugar de trabajo "VITORIA". Si ocurre un error,
+ *                                   la promesa se resuelve en un array vacío.
+ *
+ * @throws {Error} Si hay un problema al obtener o analizar los datos JSON.
+ */
+async function cargarCumpleanos() {
+    try {
+        const url = "https://raw.githubusercontent.com/sirloco/Calendario/refs/heads/master/data/cump.json";
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error("Error al cargar el archivo JSON de cumpleaños");
+        }
+        const cumpleaños = await response.json();
+
+        // Filtrar solo los de Vitoria
+        return cumpleaños.filter(c => c.WorkplaceName === "VITORIA");
+
+    } catch (error) {
+        console.error("Error al cargar los cumpleaños:", error);
+        return [];
+    }
 }
 
 /**

@@ -6,7 +6,7 @@
 body, html{
   height: 100%;
   background: rgb(63,94,251);
-  background: linear-gradient(50deg, rgba(63,94,251,1) 0%, rgba(57,245,181,1) 100%); 
+  background: linear-gradient(50deg, rgb(24, 30, 46) 0%, #395b97 100%); 
   padding: 0px;
   margin: 0px;
 }
@@ -69,26 +69,26 @@ h1{
 
 .laboral {
   background-color: transparent; /* Color de fondo transparente por defecto */
-  border-radius: 8%; /* Hace que los elementos sean circulares */
+  border-radius: 9%; /* Hace que los elementos sean circulares */
   transition: background-color 0.3s ease; /* Transición suave del color de fondo */
 }
 
 .festivo.nacional{
   background-color: red;
   color: white;
-  border-radius: 8%;
+  border-radius: 20%;
 }
 
 .festivo.local {
   background-color: blue;
   color: white;
-  border-radius: 8%;
+  border-radius: 20%;
 }
 
 .festivo.autonomico {
   background-color: green;
   color: white;
-  border-radius: 8%;
+  border-radius: 20%;
 }
 
 #year-navigation button {
@@ -126,7 +126,7 @@ h1{
 
 .cumpleanos {
   color: black;
-  border-radius: 8%;
+  border-radius: 20%;
   /* Simulación de borde animado */
   outline: 1.9px solid hsl(125, 100%, 50%); /* Comienza en verde */
   outline-offset: -1px;
@@ -137,33 +137,25 @@ h1{
 
 
 /* Hover sobre los cumpleaños para dar más interactividad */
-.cumpleanos:hover {
-  background-color: #ffca28; /* Amarillo más fuerte cuando se pasa el ratón */
-}
+/*.cumpleanos:hover {
+  background-color: #ffca28; 
+}*/
 
-
-#festivity-container {
+#festivity-name {
+  margin-left: 40px;
+  margin-right: 20px;
+  display: block;
+  color: #333;
+  text-align: center;
   background-color: white;
   border: 1px solid #ddd;
   padding: 10px;
-  border-radius: 8px;
-  max-width: 900px;
-  position: fixed;
-  top: 20px;
-  right: 20px;
+  border-radius: 9px;
+  max-width: 100%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  z-index: 100;
   font-size: 16px;
   font-family: Arial, sans-serif;
   transition: background-color 0.3s ease;
-}
-
-#festivity-name {
-  display: block;
-  color: #333;
-  font-size: 14px;
-  padding: 10px;
-  text-align: center;
 }
 
 /* Estilo de los días */
@@ -192,5 +184,11 @@ h1{
   background-color: #ddd;
 }
 
-
-
+#logo {
+  display: block;
+  /*margin-left: auto;*/
+  margin-right: 20px;
+  margin-top: 20px;
+  float:inline-end;
+  /*width: 50%;*/
+}
