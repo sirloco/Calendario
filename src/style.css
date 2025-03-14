@@ -9,13 +9,21 @@ body, html{
   background: linear-gradient(50deg, rgb(24, 30, 46) 0%, #395b97 100%); 
   padding: 0px;
   margin: 0px;
+  zoom: 1; 
+  overflow: auto;
 }
 
 header{
+  margin-top: 20px;
+  background-color: transparent;
+  border: 1px solid hsl(0, 1%, 38%);
+  border-radius: 9px;
   font-size: xx-large;
   font-weight: bold;
-  margin-left: -1%;
-  color: floralwhite;
+  margin-right: 20px;
+  margin-left: 20px;
+  color: #ffffff;
+  padding: 0 15px 0 15px;
 }
 
 .container{
@@ -24,8 +32,6 @@ header{
   gap: 5px;
   padding: 20px;
   box-sizing: border-box;
-  /*grid-template-columns: repeat(6, 1fr);  Define 6 columnas */
-  /*grid-template-rows: repeat(2, 1fr);  Define 2 filas */
 }
 
 .container > section {
@@ -94,7 +100,7 @@ h1{
 }
 
 #year-navigation button {
-  background-color: transparent; /* Hacer los botones transparentes */
+  background-color: rgba(0, 0, 0, 0.1); /* Color de fondo */
   border: none; /* Eliminar el borde */
   cursor: pointer; /* Cambiar el cursor al pasar el mouse */
   font-size: 2em; /* Tamaño de fuente */
@@ -103,7 +109,7 @@ h1{
 }
 
 #year-navigation button:hover {
-  background-color: rgba(0, 0, 0, 0.1); /* Cambiar el color de fondo al pasar el mouse */
+  color: #ffffff; /* Cambiar el color de fondo al pasar el mouse */
 }
 
 #current-year {
@@ -123,6 +129,29 @@ h1{
   color: black; /* Color del texto de las opciones*/ 
 }
 
+#leyenda {
+  display: inline-block;
+  font-size: x-small;
+}
+
+#leyenda li {
+  /*list-style-type: none;*/ 
+  display: flex;
+  align-items: center;
+  margin: -3px;
+}
+
+.color-disk {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.rojo { background-color: red; }
+.verde { background-color: green; }
+.azul { background-color: blue; }
+
 @keyframes rotar-borde {
   0% { filter: hue-rotate(0deg); }
   100% { filter: hue-rotate(360deg); }
@@ -134,7 +163,6 @@ h1{
   /* Simulación de borde animado */
   outline: 1.9px solid hsl(125, 100%, 50%); /* Comienza en verde */
   outline-offset: -1px;
-  
   /* Aplica animación solo al borde */
   animation: girar-borde 1.5s linear infinite, rotar-borde 1.5s linear infinite;
 }
@@ -145,14 +173,16 @@ h1{
   background-color: #ffca28; 
 }*/
 
-#festivity-name {
-  margin-left: 40px;
-  margin-right: 20px;
+hr {
+  margin: 0;
+  color: hsl(0, 1%, 38%);
+  border-top: 0.1px solid rgba(76, 76, 76, 0.877);
+}
+/*#festivity-name {
   display: block;
   color: #333;
   text-align: center;
-  background-color: white;
-  border: 1px solid #ddd;
+  background-color: #c2bfbf;
   padding: 10px;
   border-radius: 9px;
   max-width: 100%;
@@ -160,7 +190,7 @@ h1{
   font-size: 16px;
   font-family: Arial, sans-serif;
   transition: background-color 0.3s ease;
-}
+}*/
 
 /* Estilo de los días */
 /* Lista de días - apilados verticalmente */
@@ -189,10 +219,7 @@ h1{
 }
 
 #logo {
-  display: block;
-  /*margin-left: auto;*/
-  margin-right: 20px;
   margin-top: 20px;
   float:inline-end;
-  /*width: 50%;*/
+  max-width: 140px; /* O el tamaño que prefieras */
 }
