@@ -5,42 +5,52 @@
 }
 body, html{
   height: 100%;
-  background: rgb(63,94,251);
-  background: linear-gradient(50deg, rgb(24, 30, 46) 0%, #395b97 100%); 
-  padding: 0px;
-  margin: 0px;
-  zoom: 1; 
-  overflow: auto;
+  background: whitesmoke;
+  /*background: linear-gradient(50deg, rgb(24, 30, 46) 0%, #395b97 100%); */
+  margin: 0 auto;
+  /*overflow: auto;*/
 }
 
 header{
-  margin-top: 20px;
-  background-color: transparent;
-  border: 1px solid hsl(0, 1%, 38%);
-  border-radius: 9px;
+  width: 100%;
+  margin-bottom: 10px;
+  float: left;
+  background-color: #154464;
   font-size: xx-large;
   font-weight: bold;
-  margin-right: 20px;
-  margin-left: 20px;
   color: #ffffff;
-  padding: 0 15px 0 15px;
+  /*padding: 0 15px 0 15px;*/
+}
+
+header div{
+  margin: 1%;
+  float:left;
 }
 
 .container{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 5px;
-  padding: 20px;
+  width: 93%;
   box-sizing: border-box;
+  margin: 3% 3% 0 3%;
+  padding-top: 1%;
 }
 
 .container > section {
   background: #fff;
-  border-radius: 4%;
+  height: 16em;
+  border: 1.5px solid #154464;
+  padding: 2%;
+}
+
+section h1{
+  border-bottom: 3px solid #b73386;
+  margin: 0;
 }
 
 ol{
-  margin: 0;
+  margin-top: 4px;
   padding: 0;
   list-style: none;
   display: grid;
@@ -152,6 +162,19 @@ h1{
 .verde { background-color: green; }
 .azul { background-color: blue; }
 
+#festivity-count{
+  margin-left: 10px;
+    display: inline-block;
+    background: #e0e0e0;
+    border-radius: 5px;
+    /*padding: 4px 10px;*/
+    font-weight: bold;
+    /*font-size: 1.5em;
+    text-align: center;
+    min-width: 40px;*/
+}
+
+
 @keyframes rotar-borde {
   0% { filter: hue-rotate(0deg); }
   100% { filter: hue-rotate(360deg); }
@@ -178,19 +201,14 @@ hr {
   color: hsl(0, 1%, 38%);
   border-top: 0.1px solid rgba(76, 76, 76, 0.877);
 }
-/*#festivity-name {
+#festivity-name {
   display: block;
   color: #333;
-  text-align: center;
-  background-color: #c2bfbf;
-  padding: 10px;
+  padding: 5px;
   border-radius: 9px;
-  max-width: 100%;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   font-size: 16px;
   font-family: Arial, sans-serif;
-  transition: background-color 0.3s ease;
-}*/
+}
 
 /* Estilo de los días */
 /* Lista de días - apilados verticalmente */

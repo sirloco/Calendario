@@ -20,36 +20,47 @@
       <div id="logo">
         <img id="logo" src="https://www.segulatechnologies.com/wp-content/themes/segula-parent/library/img/logo.png" alt="Logo">
       </div>
-      
-      <button id="prev-year" class="material-symbols-rounded">chevron_left</button>
-      <span id="current-year"></span>
-      <button id="next-year" class="material-symbols-rounded">chevron_right</button>
-
-      <select id="zone-select">
-        <option value="Vitoria-Gasteiz">Vitoria</option>
-        <option value="Zamudio">Zamudio</option>
-      </select>
-      
+      <!--Se añade botones para navegar por los años-->
+      <div>
+        <button id="prev-year" class="material-symbols-rounded">chevron_left</button>
+        <span id="current-year"></span>
+        <button id="next-year" class="material-symbols-rounded">chevron_right</button>
+      </div>
+      <!--Añadimos un select para seleccionar la zona-->
+      <div>
+        <select id="zone-select">
+          <option value="Vitoria-Gasteiz">Vitoria</option>
+          <option value="Zamudio">Zamudio</option>
+        </select>
+      </div>
+      <!--Añadimos un botón para mostrar los festivos-->
       <div id="leyenda">
         <ul>
-            <li><strong>🎉 Festivos: </strong><span id="festivity-count"></span></li>
-            <li>
-              <div class="color-disk rojo"></div>
-              <span>Nacionales</span>
-            </li>
-            <li>
-              <div class="color-disk verde"></div>
-              <span>Autonómicos</span>
-            </li>
-            <li>
-              <div class="color-disk azul"></div>
-              <span>Locales</span>
-            </li>
+          <li>
+            <div class="color-disk rojo"></div>
+            <span>Nacionales</span>
+          </li>
+          <li>
+            <div class="color-disk verde"></div>
+            <span>Autonómicos</span>
+          </li>
+          <li>
+            <div class="color-disk azul"></div>
+            <span>Locales</span>
+          </li>
         </ul>
+      </div>
+      <!--Añadimos un botón para mostrar los festivos-->
+      <div>
+        <span id="festivity-count"></span>
       </div>
 
       <hr>
-      <span id="festivity-name">Pasa el ratón sobre un día para ver más detalles</span>
+
+      <!--Añadimos un botón para mostrar los festivos-->
+      <div>
+        <span id="festivity-name">Pasa el ratón sobre un día para ver más detalles</span>
+      </div>
     
     </header>
     
