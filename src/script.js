@@ -108,7 +108,7 @@ async function createCalendar ({locale, year, zona}) {
             /** Se crea un string con los estilos de cada dia */
             let estilo = `class='${clases.join(' ')}' ${firstDayColumn} data-festividad='${nombreFestividad}' title='${nombreFestividad}'`.trim();
           
-            let fechaFestividad = `data-date= '${new Date(year, monthKey + 1, day+1).toLocaleDateString('es-ES', {
+            let fechaFestividad = `data-date= '${new Date(year, monthKey, day+1).toLocaleDateString('es-ES', {
                 day: '2-digit',
                 month: '2-digit',
                 year: 'numeric'
