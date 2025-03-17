@@ -33,31 +33,30 @@
       <!--Botón para mostrar los festivos-->
       <div id="leyenda">
         <ul>
-          <li>
+          <li style="--i: 0">
+            <span>Festivos </span>
+            <span id="festivity-count"></span>
+          </li>
+          <li style="--i: 1">
             <div class="color-disk rojo"></div>
             <span>Nacionales</span>
           </li>
-          <li>
+          <li style="--i: 2">
             <div class="color-disk verde"></div>
             <span>Autonómicos</span>
           </li>
-          <li>
+          <li style="--i: 3">
             <div class="color-disk azul"></div>
             <span>Locales</span>
           </li>
         </ul>
       </div>
       <!--Botón para mostrar los festivos-->
-      <div>
-        <span id="festivity-count"></span>
+      <div id="show-festivities">
+        <span id="festivity-name"></span>
       </div>
-      
       <div>
-        
-      </div>
-      <!--Botón para mostrar los festivos-->
-      <div>
-        <span id="festivity-name">Pasa el ratón sobre un día para ver más detalles</span>
+        <input type="text" id="search" placeholder="Buscar">
       </div>
     
       <div id="logo">

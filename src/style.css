@@ -6,41 +6,33 @@
 body, html{
   height: 100%;
   background: whitesmoke;
-  /*background: linear-gradient(50deg, rgb(24, 30, 46) 0%, #395b97 100%); */
   margin: 0 auto;
-  /*overflow: auto;*/
+  zoom: 90%;
 }
 
 header{
   width: 100%;
   height: 4em;
   margin-bottom: 10px;
-  /*float: left;*/
   display: flex;
   align-items: center;
-  /*justify-content: space-between;*/
   background-color: #154464;
   font-size: xx-large;
   font-weight: bold;
   color: #ffffff;
-  /*padding: 0 15px 0 15px;*/
 }
 
 header div{
   margin: 1%;
-  float:left;
   display: flex;
-  /*align-items: flex-end;*/
 }
 
 .container{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 5px;
-  /*width: 93%;*/
   box-sizing: border-box;
   margin: 1% 1% 0 1%;
-  /*padding-top: 1%;*/
 }
 
 .container > section {
@@ -158,22 +150,27 @@ h1{
 }
 
 #leyenda {
+  width: 20%;
+  height: 100%;
+  background-color: #27587A;
+  clip-path: polygon(0% 0%, 80% 0%, 100% 100%, 20% 100%);
+  margin: 0;
   display: inline-block;
-  font-size: x-small;
+  font-size: small;
 }
 
 #leyenda li {
-  /*list-style-type: none;*/ 
   display: flex;
   align-items: center;
-  margin: -3px;
+  margin: 0 0 7px 0;
+  transform: translateX(calc(var(--i) * 15px)); /* Desplazamiento progresivo */
 }
 
 .color-disk {
   width: 10px;
   height: 10px;
-  border-radius: 50%;
-  margin-right: 10px;
+  clip-path: circle();
+  margin: 5px 10px;
 }
 
 .rojo { background-color: red; }
@@ -182,14 +179,7 @@ h1{
 
 #festivity-count{
   margin-left: 10px;
-  display: inline-block;
-  background: #e0e0e0;
-  border-radius: 5px;
-  /*padding: 4px 10px;*/
   font-weight: bold;
-  /*font-size: 1.5em;
-  text-align: center;
-  min-width: 40px;*/
 }
 
 
@@ -214,12 +204,16 @@ h1{
   background-color: #ffca28; 
 }*/
 
-hr {
-  margin: 0;
-  color: hsl(0, 1%, 38%);
-  border-top: 0.1px solid rgba(76, 76, 76, 0.877);
+#show-festivities {  
+  margin-left: -5%;
+  clip-path: polygon(0% 0%, 80% 0%, 100% 100%, 20% 100%);
+  background-color: #426F8E;
+  width: 20%;
+  height: 100%;
 }
+
 #festivity-name {
+  margin-left: 70px;
   display: inline-block;
   /*color: #333;*/
   padding: 5px;
