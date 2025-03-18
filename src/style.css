@@ -143,6 +143,7 @@ h1{
   background-color: transparent;
   border-color: transparent;
   color: white;
+  text-align: center;
 }
 
 #zone-select option {
@@ -150,20 +151,23 @@ h1{
 }
 
 #leyenda {
-  width: 20%;
   height: 100%;
-  background-color: #27587A;
-  clip-path: polygon(0% 0%, 80% 0%, 100% 100%, 20% 100%);
+  /*background-color: #27587A;*/
+  /*clip-path: polygon(0% 0%, 80% 0%, 100% 100%, 20% 100%);*/
   margin: 0;
   display: inline-block;
   font-size: small;
+}
+
+#leyenda ul {
+  padding: 0;
 }
 
 #leyenda li {
   display: flex;
   align-items: center;
   margin: 0 0 7px 0;
-  transform: translateX(calc(var(--i) * 15px)); /* Desplazamiento progresivo */
+  /*transform: translateX(calc(var(--i) * 15px)); /* Desplazamiento progresivo */
 }
 
 .color-disk {
@@ -198,26 +202,14 @@ h1{
   animation: girar-borde 1.5s linear infinite, rotar-borde 1.5s linear infinite;
 }
 
-
-/* Hover sobre los cumpleaños para dar más interactividad */
-/*.cumpleanos:hover {
-  background-color: #ffca28; 
-}*/
-
 #show-festivities {  
-  margin-left: -5%;
-  clip-path: polygon(0% 0%, 80% 0%, 100% 100%, 20% 100%);
-  background-color: #426F8E;
-  width: 20%;
   height: 100%;
 }
 
 #festivity-name {
   margin-left: 70px;
   display: inline-block;
-  /*color: #333;*/
   padding: 5px;
-  /*border-radius: 9px;*/
 }
 
 #festivity-name ul{
@@ -260,6 +252,57 @@ h1{
 #days-list .day:hover {
   background-color: #ddd;
 }
+
+.search-container {
+  position: relative;
+  display: inline-block;
+}
+
+#search {
+  width: 200px;
+  height: 36px;
+  padding-right: 36px; /* Espacio para el icono */
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-icon {
+  position: absolute;
+  right: 5px;
+  top: 60%;
+  transform: translateY(-45%);
+  width: 25px;
+  height: 25px;
+  pointer-events: none; /* No bloquea el input */
+}
+
+.resultados-container {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 5px;
+  padding: 5px;
+  max-height: 150px;
+  overflow-y: auto;
+  background: white;
+}
+
+.resultados-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resultados-container li {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.resultados-container li:hover {
+  background: #f0f0f0;
+}
+
+
 
 #logo {
   position: absolute;

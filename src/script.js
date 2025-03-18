@@ -70,7 +70,7 @@ async function createCalendar ({locale, year, zona}) {
             
             /** Busca dentro del array los festivos que trae, el find devuelve el primer elemento coincidente */
             const esFestivo = fMes.find(festivo => new Date(festivo.date).getDate() === index+1);
-            // TODO si alguien cumple años y es festivo, se mostrará el cumpleaños y no el festivo o si otro cumple años el mismo día
+            
             const cumpleaneros = fMes.filter(cumple => 
                 cumple.municipalityEs ==="Cumpleanos" && 
                 cumple.WorkplaceName === "VITORIA" && 
@@ -212,6 +212,24 @@ async function cargarCumpleanos() {
     }
 }
 
+
+async function cargaCumpleanos() {
+    try {
+        const url = "https://raw.githubusercontent.com/sirloco/Calendario/refs/heads/master/data/cump.json";
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error("Error al cargar el archivo JSON de cumpleaños");
+        }
+        cumpleanosData = await response.json(); // Guardamos los datos en la variable global
+        cumpleanosData = cumpleanosData.filter(c => c.WorkplaceName === "VITORIA"); // Filtramos por Vitoria
+    } catch (error) {
+        console.error("Error al cargar los cumpleaños:", error);
+    }
+}
+
+
+
+
 /**
  * Genera el calendario al avanzar un año
 */
@@ -304,6 +322,31 @@ function ocultarTextoFestivo(event) {
     }
 };
 
+/*document.getElementById("search").addEventListener("input", function() {
+    let query = this.value.trim().toLowerCase();
+    let resultadosContainer = document.getElementById("resultados"); // Div donde se mostrarán los resultados
+
+    if (query.length < 2) {
+        resultadosContainer.innerHTML = ""; // No mostramos nada si tiene menos de 2 caracteres
+        return;
+    }
+
+    let resultados = cumpleanosData.filter(persona => 
+        persona.NombreCompleto.toLowerCase().includes(query)
+    );
+
+    if (resultados.length === 0) {
+        resultadosContainer.innerHTML = "<p>No hay coincidencias</p>";
+        return;
+    }
+
+    // Pintamos los resultados en la lista
+    resultadosContainer.innerHTML = `
+        <ul>${resultados.map(c => `<li>${c.NombreCompleto} - ${c.FechaNacimiento}</li>`).join("")}</ul>
+    `;
+});*/
+
+
 /** Agregar eventos de clic a los botones de navegación de año y festivos*/
 document.getElementById("prev-year").addEventListener("click", retrocederAnio);
 document.getElementById("next-year").addEventListener("click", avanzarAnio);
@@ -320,4 +363,6 @@ let date = new Date();
 let currYear = date.getFullYear();
 urteSelect.textContent = currYear;
 
+let cumpleanosData = [];
+cargaCumpleanos();
 createCalendar({year: currYear, locale: 'es', zona: selectedZone});
