@@ -111,8 +111,6 @@ h1{
   display: flex;
   align-items: center;
   gap: 10px;
- /* justify-content: center;
-  margin: 0 15px;*/
 }
 
 #year-navigation button {
@@ -124,7 +122,6 @@ h1{
   display: flex;
   align-items: center;
   justify-content: center;
-  /*vertical-align: -15%;*/
 }
 
 #year-navigation button:hover {
@@ -148,11 +145,11 @@ h1{
 
 #zone-select option {
   color: black; /* Color del texto de las opciones*/ 
+  /*text-align: center;*/
 }
 
 #leyenda {
   height: 100%;
-  /*background-color: #27587A;*/
   /*clip-path: polygon(0% 0%, 80% 0%, 100% 100%, 20% 100%);*/
   margin: 0;
   display: inline-block;
@@ -166,14 +163,17 @@ h1{
 #leyenda li {
   display: flex;
   align-items: center;
-  margin: 0 0 7px 0;
+  /*margin: 0 0 7px 0;*/
   /*transform: translateX(calc(var(--i) * 15px)); /* Desplazamiento progresivo */
 }
 
 .color-disk {
-  width: 10px;
-  height: 10px;
+  width: 20px;
+  height: 20px;
+  /*padding: 1%;
+  background-clip: content-box;*/
   clip-path: circle();
+  /*border: 5px solid;*/
   margin: 5px 10px;
 }
 
@@ -254,23 +254,23 @@ h1{
 }
 
 .search-container {
-  position: relative;
+  right: 0;
+  top: 1.5em;
+  position: absolute;
   display: inline-block;
 }
 
 #search {
-  width: 200px;
-  height: 36px;
+  height: 30px;
   padding-right: 36px; /* Espacio para el icono */
-  font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
 .search-icon {
   position: absolute;
-  right: 5px;
-  top: 60%;
+  right: 0;
+  top: 46%;
   transform: translateY(-45%);
   width: 25px;
   height: 25px;
