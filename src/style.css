@@ -114,7 +114,8 @@ h1{
 }
 
 #year-navigation button {
-  background-color: rgba(0, 0, 0, 0.1); /* Color de fondo */
+  color: whitesmoke;
+  background-color: transparent;/* rgba(0, 0, 0, 0.1); /* Color de fondo */
   border: none; /* Eliminar el borde */
   cursor: pointer; /* Cambiar el cursor al pasar el mouse */
   font-size: 2em; /* Tamaño de fuente */
@@ -125,7 +126,7 @@ h1{
 }
 
 #year-navigation button:hover {
-  color: #ffffff; /* Cambiar el color de fondo al pasar el mouse */
+  color: rgb(0, 255, 102); /* Cambiar el color de fondo al pasar el mouse */
 }
 
 #current-year {
@@ -144,7 +145,7 @@ h1{
 }
 
 #zone-select option {
-  color: black; /* Color del texto de las opciones*/ 
+  color: hwb(0 0% 100%); /* Color del texto de las opciones*/ 
   /*text-align: center;*/
 }
 
