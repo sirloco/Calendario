@@ -126,7 +126,7 @@ h1{
 }
 
 #year-navigation button:hover {
-  color: rgb(0, 255, 102); /* Cambiar el color de fondo al pasar el mouse */
+  color: #b73386; /* Cambiar el color de fondo al pasar el mouse */
 }
 
 #current-year {
