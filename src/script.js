@@ -163,7 +163,7 @@ async function cargarFestivos(zona, year) {
         const festivos = await response.json();
 
         let festivosFiltrados = festivos.filter(festividad => {
-            const municipioOterritorio = festividad.municipalityEs;
+            const municipioOterritorio = festividad.municipalityEs.trim();
             //["CAE", zona, "Álava - Araba"].includes(festividad.municipalityEs) 
             return municipioOterritorio === "CAE" || // Festivos comunidad autónoma y nacionales 
             municipioOterritorio === municipio || // Festivos locales según la zona seleccionada
