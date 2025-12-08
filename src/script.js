@@ -154,11 +154,21 @@ async function cargarFestivos(zona, year) {
     try {
         const festivosZona = "https://opendata.euskadi.eus/contenidos/ds_eventos/calendario_laboral_"+year+"/opendata/calendario_laboral_"+year+".json";
         const response = await fetch(festivosZona);
+
+        // Verificar si la respuesta es exitosa
+        if (!response.ok) {
+            throw new Error(`Error al cargar los festivos desde la URL proporcionada: ${response.status}`);
+        }
+
         const festivos = await response.json();
 
-        let festivosFiltrados = festivos.filter(festividad => 
-            ["CAE", zona, "Álava - Araba"].includes(festividad.municipalityEs) 
-        );
+        let festivosFiltrados = festivos.filter(festividad => {
+            const municipioOterritorio = festividad.municipalityEs;
+            //["CAE", zona, "Álava - Araba"].includes(festividad.municipalityEs) 
+            return municipioOterritorio === "CAE" || // Festivos comunidad autónoma y nacionales 
+            municipioOterritorio === municipio || // Festivos locales según la zona seleccionada
+            municipioOterritorio === "Álava - Araba"; // Festivos autonómicos
+        });
 
         // Añadir los días 24 y 31 de diciembre como festivos
         festivosFiltrados.push(
