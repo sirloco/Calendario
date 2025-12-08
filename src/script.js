@@ -95,7 +95,7 @@ async function createCalendar ({locale, year, zona}) {
                 nombreFestividad = esFestivo.descripcionEs ? `🎉 ${esFestivo.descripcionEs},` : '';
     
                 /** Si el array devuelve valor pondra el selector si no devuelve valor coge 'laboral' por defecto */                
-                clases.push(tipoFestividadMap[esFestivo.municipalityEs] || 'laboral');               
+                clases.push(tipoFestividadMap[esFestivo.municipalityEs.trim()] || 'laboral');               
             }
 
            // Si el tipo es cumpleaños, añades un estilo especial
