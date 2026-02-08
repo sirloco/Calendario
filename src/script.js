@@ -348,6 +348,8 @@ function debounce(func, delay) {
 function realizarBusqueda(query) {
     const resultadosContainer = document.getElementById("resultados");
     
+    if (!resultadosContainer) return;
+    
     // Validar que los datos estén cargados
     if (!cumpleanosData || cumpleanosData.length === 0) {
         resultadosContainer.innerHTML = "<p>Cargando datos...</p>";
@@ -387,20 +389,31 @@ function realizarBusqueda(query) {
 }
 
 // Event listener para búsqueda con debounce
-document.getElementById("search").addEventListener("input", 
-    debounce(function(e) {
-        const query = e.target.value.trim();
-        realizarBusqueda(query);
-    }, 300)
-);
+const searchInput = document.getElementById("search");
+if (searchInput) {
+    searchInput.addEventListener("input", 
+        debounce(function(e) {
+            const query = e.target.value.trim();
+            realizarBusqueda(query);
+        }, 300)
+    );
+}
 
 
 /** Agregar eventos de clic a los botones de navegación de año y festivos*/
 document.getElementById("prev-year").addEventListener("click", () => cambiarAnio(-1));
 document.getElementById("next-year").addEventListener("click", () => cambiarAnio(1));
-document.getElementById("zone-select").addEventListener("click", cambioZona);
-document.addEventListener("mouseover", (event) => mostrarTextoFestivo(event));
-document.addEventListener("mouseout", (event) => ocultarTextoFestivo(event));
+document.getElementById("zone-select").addEventListener("change", cambioZona);
+document.addEventListener("mouseover", (event) => {
+    if (event.target.tagName === 'LI' && event.target.dataset.festividad) {
+        mostrarTextoFestivo(event);
+    }
+});
+document.addEventListener("mouseout", (event) => {
+    if (event.target.tagName === 'LI' && event.target.dataset.festividad) {
+        ocultarTextoFestivo(event);
+    }
+});
 
 var urteSelect = document.getElementById("current-year");
 var zoneSelect = document.getElementById("zone-select");
@@ -412,5 +425,7 @@ let currYear = date.getFullYear();
 urteSelect.textContent = currYear;
 
 let cumpleanosData = [];
-cargaCumpleanos();
-createCalendar({year: currYear, locale: 'es', zona: selectedZone});
+cargarCumpleanos().then(data => {
+    cumpleanosData = data;
+    createCalendar({year: currYear, locale: 'es', zona: selectedZone});
+});
