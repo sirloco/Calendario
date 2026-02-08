@@ -292,6 +292,8 @@ h1{
   overflow-y: auto;
   background: white;
   z-index: 10;
+  color: #000;
+  font-size: 0.85em;
 }
 
 .resultados-container ul {
@@ -303,7 +305,7 @@ h1{
 .resultados-container li {
   padding: 5px;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 0.85em;
 }
 
 .resultados-container li:hover {
@@ -316,7 +318,8 @@ h1{
   padding: 5px;
   background: white;
   box-sizing: border-box;
-  font-size: 0.95em;
+  font-size: 0.9em;
+  color: #000;
 }
 
 
