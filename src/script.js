@@ -374,12 +374,12 @@ function realizarBusqueda(query) {
     // Limitar resultados a 10 para mejor UX
     const resultadosLimitados = resultados.slice(0, 10);
     
-    // Formatear fecha de nacimiento a formato dd/mm
+    // Formatear fecha de nacimiento a formato dd/mm y hacer clicables
     const formatearResultados = resultadosLimitados.map(c => {
         const fecha = new Date(c.date);
         const dia = String(fecha.getDate()).padStart(2, '0');
         const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-        return `<li>${c.NombreCompleto} - ${dia}/${mes}</li>`;
+        return `<li data-nombre="${c.NombreCompleto}" data-fecha="${dia}/${mes}" class="search-result-item">${c.NombreCompleto} - ${dia}/${mes}</li>`;
     }).join("");
 
     resultadosContainer.innerHTML = `
@@ -399,6 +399,28 @@ if (searchInput) {
     );
 }
 
+}
+
+// Delegación de clic en resultados de búsqueda
+const resultadosContainer = document.getElementById("resultados");
+if (resultadosContainer) {
+    resultadosContainer.addEventListener("click", function(event) {
+        const liSeleccionado = event.target.closest('.search-result-item');
+        if (!liSeleccionado) return;
+        
+        const nombre = liSeleccionado.dataset.nombre;
+        const fecha = liSeleccionado.dataset.fecha;
+        
+        // Rellenar input con el nombre
+        searchInput.value = nombre;
+        
+        // Mostrar solo el resultado seleccionado
+        resultadosContainer.innerHTML = `<div class="selected-result">${nombre} - ${fecha}</div>`;
+        
+        // Mantener foco en input
+        searchInput.focus();
+    });
+}
 
 /** Agregar eventos de clic a los botones de navegación de año y festivos*/
 document.getElementById("prev-year").addEventListener("click", () => cambiarAnio(-1));
