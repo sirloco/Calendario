@@ -1,3 +1,7 @@
+// Variables globales cache para performance
+let cachedWeekDaysNames = {};
+let cachedRenderedWeekDays = {};
+
 async function createCalendar ({locale, year, zona}) {
 
     /** Se usa el spread ... para crear el array [0,1,2,3,4,5,6] */
@@ -223,19 +227,7 @@ async function cargarCumpleanos() {
 }
 
 
-async function cargaCumpleanos() {
-    try {
-        const url = "https://raw.githubusercontent.com/sirloco/Calendario/refs/heads/master/data/cump.json";
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error("Error al cargar el archivo JSON de cumpleaños");
-        }
-        cumpleanosData = await response.json(); // Guardamos los datos en la variable global
-        cumpleanosData = cumpleanosData.filter(c => c.WorkplaceName === "VITORIA"); // Filtramos por Vitoria
-    } catch (error) {
-        console.error("Error al cargar los cumpleaños:", error);
-    }
-}
+
 
 
 
@@ -243,20 +235,23 @@ async function cargaCumpleanos() {
 /**
  * Genera el calendario al avanzar un año
 */
-function avanzarAnio() {
-    // Obtener el elemento del año actual
+/**
+ * Cambia el año actual y regenera el calendario
+ * @param {number} delta - Número de años a cambiar (+1 para siguiente, -1 para anterior)
+ */
+function cambiarAnio(delta) {
     const currentYearElement = document.getElementById("current-year");
-    var zoneSelect = document.getElementById("zone-select");
-    var selectedZone = zoneSelect.value;
+    const zoneSelect = document.getElementById("zone-select");
+    const selectedZone = zoneSelect.value;
 
     // Obtener el año actual
-    let currentYear = parseInt(currentYearElement.textContent);
-    // Incrementar el año
-    currentYear++;
+    const currentYear = parseInt(currentYearElement.textContent);
+    // Calcular nuevo año
+    const newYear = currentYear + delta;
     // Actualizar el año en el elemento
-    currentYearElement.textContent = currentYear;
-    // Llamar a createCalendar() con el nuevo año
-    createCalendar({ year: currentYear, locale: 'es', zona: selectedZone});
+    currentYearElement.textContent = newYear;
+    // Regenerar el calendario
+    createCalendar({ year: newYear, locale: 'es', zona: selectedZone });
 }
 
 /**
@@ -332,17 +327,41 @@ function ocultarTextoFestivo(event) {
     }
 };
 
-/*document.getElementById("search").addEventListener("input", function() {
-    let query = this.value.trim().toLowerCase();
-    let resultadosContainer = document.getElementById("resultados"); // Div donde se mostrarán los resultados
+/**
+ * Función debounce para optimizar búsquedas
+ * @param {Function} func - Función a ejecutar
+ * @param {number} delay - Tiempo de espera en ms
+ * @returns {Function} Función con debounce
+ */
+function debounce(func, delay) {
+    let timeoutId;
+    return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func.apply(this, args), delay);
+    };
+}
 
-    if (query.length < 2) {
-        resultadosContainer.innerHTML = ""; // No mostramos nada si tiene menos de 2 caracteres
+/**
+ * Filtra y muestra resultados de búsqueda de cumpleaños
+ * @param {string} query - Término de búsqueda
+ */
+function realizarBusqueda(query) {
+    const resultadosContainer = document.getElementById("resultados");
+    
+    // Validar que los datos estén cargados
+    if (!cumpleanosData || cumpleanosData.length === 0) {
+        resultadosContainer.innerHTML = "<p>Cargando datos...</p>";
         return;
     }
 
-    let resultados = cumpleanosData.filter(persona => 
-        persona.NombreCompleto.toLowerCase().includes(query)
+    if (query.length < 2) {
+        resultadosContainer.innerHTML = "";
+        return;
+    }
+
+    // Filtrar por nombre completo (case insensitive)
+    const resultados = cumpleanosData.filter(persona => 
+        persona.NombreCompleto.toLowerCase().includes(query.toLowerCase())
     );
 
     if (resultados.length === 0) {
@@ -350,16 +369,35 @@ function ocultarTextoFestivo(event) {
         return;
     }
 
-    // Pintamos los resultados en la lista
+    // Limitar resultados a 10 para mejor UX
+    const resultadosLimitados = resultados.slice(0, 10);
+    
+    // Formatear fecha de nacimiento a formato dd/mm
+    const formatearResultados = resultadosLimitados.map(c => {
+        const fecha = new Date(c.date);
+        const dia = String(fecha.getDate()).padStart(2, '0');
+        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+        return `<li>${c.NombreCompleto} - ${dia}/${mes}</li>`;
+    }).join("");
+
     resultadosContainer.innerHTML = `
-        <ul>${resultados.map(c => `<li>${c.NombreCompleto} - ${c.FechaNacimiento}</li>`).join("")}</ul>
+        <ul>${formatearResultados}</ul>
+        ${resultados.length > 10 ? `<p style="font-size: 0.8em; color: #666;">Mostrando 10 de ${resultados.length} resultados</p>` : ''}
     `;
-});*/
+}
+
+// Event listener para búsqueda con debounce
+document.getElementById("search").addEventListener("input", 
+    debounce(function(e) {
+        const query = e.target.value.trim();
+        realizarBusqueda(query);
+    }, 300)
+);
 
 
 /** Agregar eventos de clic a los botones de navegación de año y festivos*/
-document.getElementById("prev-year").addEventListener("click", retrocederAnio);
-document.getElementById("next-year").addEventListener("click", avanzarAnio);
+document.getElementById("prev-year").addEventListener("click", () => cambiarAnio(-1));
+document.getElementById("next-year").addEventListener("click", () => cambiarAnio(1));
 document.getElementById("zone-select").addEventListener("click", cambioZona);
 document.addEventListener("mouseover", (event) => mostrarTextoFestivo(event));
 document.addEventListener("mouseout", (event) => ocultarTextoFestivo(event));

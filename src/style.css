@@ -7,7 +7,6 @@ body, html{
   height: 100%;
   background: whitesmoke;
   margin: 0 auto;
-  zoom: 90%;
 }
 
 header{
@@ -310,4 +309,116 @@ h1{
   right: 0;
   top: 0;
   max-width: 140px; /* O el tamaño que prefieras */
+}
+
+/* Responsive Design - Mobile & Tablet Optimization */
+@media (max-width: 1200px) {
+  .container {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+  
+  header {
+    font-size: x-large;
+  }
+  
+  #zone-select {
+    font-size: large;
+  }
+  
+  #current-year {
+    font-size: 1.5em;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 3px;
+  }
+  
+  header {
+    font-size: large;
+    height: 3em;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  
+  #zone-select {
+    font-size: medium;
+  }
+  
+  #current-year {
+    font-size: 1.2em;
+  }
+  
+  #year-navigation button {
+    font-size: 1.5em;
+  }
+  
+  .search-container {
+    position: relative;
+    top: auto;
+    right: auto;
+  }
+  
+  #leyenda {
+    font-size: x-small;
+  }
+  
+  #logo {
+    max-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  header {
+    font-size: medium;
+    height: auto;
+    padding: 5px;
+  }
+  
+  #zone-select {
+    font-size: small;
+  }
+  
+  #current-year {
+    font-size: 1em;
+    margin: 0 5px;
+  }
+  
+  #year-navigation button {
+    font-size: 1.2em;
+  }
+  
+  #leyenda {
+    display: none; /* Ocultar leyenda en mobile para ahorrar espacio */
+  }
+  
+  #show-festivities {
+    flex: 1;
+    text-align: center;
+  }
+  
+  #festivity-name {
+    margin-left: 0;
+    font-size: 0.8em;
+  }
+}
+
+@media (max-width: 320px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+  
+  header {
+    font-size: small;
+  }
+  
+  #year-navigation button {
+    font-size: 1em;
+  }
 }
