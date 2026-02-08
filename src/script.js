@@ -384,7 +384,6 @@ function realizarBusqueda(query) {
 
     resultadosContainer.innerHTML = `
         <ul>${formatearResultados}</ul>
-        ${resultados.length > 10 ? `<p style="font-size: 0.8em; color: #666;">Mostrando 10 de ${resultados.length} resultados</p>` : ''}
     `;
 }
 
