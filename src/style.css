@@ -280,10 +280,8 @@ h1{
 }
 
 .resultados-container {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  width: 100%;
+  display: inline-block;
+  width: 240px;
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -291,7 +289,6 @@ h1{
   max-height: 150px;
   overflow-y: auto;
   background: white;
-  z-index: 10;
   color: #000;
   font-size: 0.6em;
 }

@@ -346,7 +346,7 @@ function debounce(func, delay) {
  * @param {string} query - Término de búsqueda
  */
 function realizarBusqueda(query) {
-    const resultadosContainer = document.getElementById("resultados");
+    const resultadosContainer = document.getElementById("festivity-name");
     
     if (!resultadosContainer) return;
     
@@ -383,7 +383,9 @@ function realizarBusqueda(query) {
     }).join("");
 
     resultadosContainer.innerHTML = `
-        <ul>${formatearResultados}</ul>
+        <div class="resultados-container">
+            <ul>${formatearResultados}</ul>
+        </div>
     `;
 }
 
@@ -398,8 +400,8 @@ if (searchInput) {
     );
 }
 
-// Delegación de clic en resultados de búsqueda
-const resultadosContainer = document.getElementById("resultados");
+// Delegación de clic en resultados de búsqueda (ahora en la cabecera de festivos)
+const resultadosContainer = document.getElementById("festivity-name");
 if (resultadosContainer) {
     resultadosContainer.addEventListener("click", function(event) {
         const liSeleccionado = event.target.closest('.search-result-item');
@@ -411,7 +413,7 @@ if (resultadosContainer) {
         // Rellenar input con el nombre
         searchInput.value = nombre;
         
-        // Mostrar solo el resultado seleccionado
+        // Mostrar solo el resultado seleccionado en la cabecera
         resultadosContainer.innerHTML = `<div class="selected-result">${nombre} - ${fecha}</div>`;
         
         // Mantener foco en input
