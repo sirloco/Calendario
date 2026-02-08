@@ -257,7 +257,9 @@ h1{
   right: 0;
   top: 1.5em;
   position: absolute;
-  display: inline-block;
+  display: block;
+  width: 260px;
+  box-sizing: border-box;
 }
 
 #search {
@@ -278,13 +280,18 @@ h1{
 }
 
 .resultados-container {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-top: 5px;
   padding: 5px;
   max-height: 150px;
   overflow-y: auto;
   background: white;
+  z-index: 10;
 }
 
 .resultados-container ul {
@@ -300,6 +307,14 @@ h1{
 
 .resultados-container li:hover {
   background: #f0f0f0;
+}
+
+.selected-result {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  background: white;
+  box-sizing: border-box;
 }
 
 
@@ -359,6 +374,7 @@ h1{
     position: relative;
     top: auto;
     right: auto;
+    width: 100%;
   }
   
   #leyenda {
