@@ -303,6 +303,7 @@ h1{
 .resultados-container li {
   padding: 5px;
   cursor: pointer;
+  font-size: 0.9em;
 }
 
 .resultados-container li:hover {
@@ -315,6 +316,7 @@ h1{
   padding: 5px;
   background: white;
   box-sizing: border-box;
+  font-size: 0.95em;
 }
 
 
