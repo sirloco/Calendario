@@ -399,8 +399,6 @@ if (searchInput) {
     );
 }
 
-}
-
 // Delegación de clic en resultados de búsqueda
 const resultadosContainer = document.getElementById("resultados");
 if (resultadosContainer) {
